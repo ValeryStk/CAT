@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8">
+  <title>page-break-after</title>
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+</style>
+ </head>
+ 
+ <body>
+
+  
+  <table style="border: 1px solid black; cellspacing="2"  class="IDLTable">
+            <colgroup><col>             <col>             </colgroup><thead>                 <tr>
+                    <td class="TableTitle">
+                    <p class="TableHead">Field</p>
+					
+					</td>
+                    <td class="TableTitle">
+                        <p class="TableHead">Description</p>
+                    </td>                 </tr>             </thead>
+            <tbody>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="acquisition_time"></a><span style="font-family: monospace">acquisition time</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Data acquisition time string that conforms to the ISO-8601 standard. The string can be in any of the following formats:</p>
+                        <!--sphider_noindex--><pre>YYYY-MM-DD</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>YYYY-MM-DDTHH:MM:SS.DZ</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>YYYY-MM-DDTHH:MM:SS:Dooo:mm</pre><!--/sphider_noindex-->
+                        <p>Where:</p>                         <ul>
+                            <li value="1"><span style="font-family: monospace">YYYY</span> is the four-digit year</li>
+                            <li value="2"><span style="font-family: monospace">MM</span> is the two-digit month</li>
+                            <li value="3"><span style="font-family: monospace">DD</span> is the two-digit day</li>
+                            <li value="4"><span style="font-family: monospace">T</span> separates the date and time</li>
+                            <li value="5"><span style="font-family: monospace">HH</span> is the two-digit hour</li>
+                            <li value="6"><span style="font-family: monospace">MM</span> is the two-digit minute</li>
+                            <li value="7"><span style="font-family: monospace">SS</span> is the two-digit second</li>
+                            <li value="8"><span style="font-family: monospace">D</span> is the decimal fraction of a second with up to double-precision</li>
+                            <li value="9"><span style="font-family: monospace">Z</span> indicates that the time is in Coordinate Universal Time (UTC)</li>
+                            <li value="10"><span style="font-family: monospace">ooo</span> is a two-digit offset in hours from UTC time. If the offset is negative, a minus symbol (-)&nbsp;precedes the value.</li>
+                            <li value="11"><span style="font-family: monospace">mm</span> is an optional partial-hour offset (in minutes) from UTC time.</li>
+                        </ul>                     </td>                 </tr>
+                <tr>                     <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">band names</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>The names of image bands. </p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="bands"></a><span style="font-family: monospace">bands</span>
+                        </p>
+                        <p style="text-align: center;">(required)</p>
+                    </td>                     <td class="IDLTable">
+                        <p>The number of bands per image file.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">bbl</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Lists the bad band multiplier values of each band in an image, typically 0 for bad bands and 1 for good bands.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="byte_order"></a><span style="font-family: monospace">byte order</span>
+                        </p>
+                        <p style="text-align: center;">(required)</p>
+                    </td>                     <td class="IDLTable">
+                        <p>The order of the bytes in integer, long integer, 64-bit integer, unsigned 64-bit integer, floating point, double precision, and complex data types. Use one of the following:</p>
+                        <ul>
+                            <li value="1">Byte order=0 (<b>Host (Intel)</b> in the Header Info dialog) is least significant byte first (LSF) data (DEC and MS-DOS systems).</li>
+                            <li value="2">Byte order=1 (<b>Network (IEEE)</b> in the Header Info dialog) is most significant byte first (MSF) data (all other platforms).</li>
+                        </ul>                     </td>                 </tr>
+                <tr>                     <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">class lookup</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Lists  class colors using RGB color definitions for classification files. For example, black is <span style="font-family: monospace">0,0,0</span>. </p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">class names</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Lists class names for classification files.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">classes</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Defines the number of classes, including unclassified regions, for classification files.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">cloud cover</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Percentage of cloud cover within the raster.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">complex function</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Specifies the values to calculate from a complex image and to use when displaying the image, calculating statistics for the image, or writing the image to a new file. Values include <span style="font-family: monospace">Real</span>, <span style="font-family: monospace">Imaginary</span>, <span style="font-family: monospace">Power</span>, <span style="font-family: monospace">Magnitude</span>, and <span style="font-family: monospace">Phase</span>. The default value is <span style="font-family: monospace">Power</span>.</p>
+                    </td>                 </tr>
+                <tr data-mc-conditions="">
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">coordinate system string</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>When you save a georeferenced file to ENVI raster format, ENVI adds a <span style="font-family: monospace">coordinate system string</span> field to the header file. It lists the parameters used for a geographic or projected coordinate system. Following are some examples:</p>
+                        <p>A <b>geographic coordinate system</b> (for example, Geographic Lat/Lon) string contains the word <span style="font-family: monospace">GEOGCS</span> and lists the coordinate system name, datum, spheroid, prime meridian, and units:</p><!--sphider_noindex--><pre>coordinate system string = </pre><!--/sphider_noindex--><!--sphider_noindex--><pre>GEOGCS[<span class="IDLstring">"GCS_WGS_1984"</span>,</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>DATUM[<span class="IDLstring">"D_WGS_1984"</span>,</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>SPHEROID[<span class="IDLstring">"WGS_1984"</span>,<span class="IDLnumber">6378137.0</span>,<span class="IDLnumber">298.257223563</span>]],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>PRIMEM[<span class="IDLstring">"Greenwich"</span>,<span class="IDLnumber">0.0</span>],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>UNIT[<span class="IDLstring">"Degree"</span>,<span class="IDLnumber">0.0174532925199433</span>]]</pre><!--/sphider_noindex-->
+                        <p>A <b>projected coordinate system</b> string contains the word <span style="font-family: monospace">PROJCS</span> and lists all of the geographic coordinate system parameters, plus detailed parameters that describe the projected coordinate system:</p><!--sphider_noindex--><pre>coordinate system string = </pre><!--/sphider_noindex--><!--sphider_noindex--><pre>PROJCS[<span class="IDLstring">"WGS_1984_South_Georgia_Lambert"</span>,</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>GEOGCS[<span class="IDLstring">"GCS_WGS_1984"</span>,</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>DATUM[<span class="IDLstring">"D_WGS_1984"</span>,</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>SPHEROID[<span class="IDLstring">"WGS_1984"</span>,<span class="IDLnumber">6378137.0</span>,<span class="IDLnumber">298.257223563</span>]],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>PRIMEM[<span class="IDLstring">"Greenwich"</span>,<span class="IDLnumber">0.0</span>],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>UNIT[<span class="IDLstring">"Degree"</span>,<span class="IDLnumber">0.0174532925199433</span>]],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>PROJECTION[<span class="IDLstring">"Lambert_Conformal_Conic"</span>],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>PARAMETER[<span class="IDLstring">"False_Easting"</span>,<span class="IDLnumber">0.0</span>],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>PARAMETER[<span class="IDLstring">"False_Northing"</span>,<span class="IDLnumber">0.0</span>],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>PARAMETER[<span class="IDLstring">"Central_Meridian"</span>,-<span class="IDLnumber">37.0</span>],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>PARAMETER[<span class="IDLstring">"Standard_Parallel_1"</span>,-<span class="IDLnumber">54.0</span>],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>PARAMETER[<span class="IDLstring">"Standard_Parallel_2"</span>,-<span class="IDLnumber">54.75</span>],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>PARAMETER[<span class="IDLstring">"Latitude_Of_Origin"</span>,-<span class="IDLnumber">55.0</span>],</pre><!--/sphider_noindex--><!--sphider_noindex--><pre>UNIT[<span class="IDLstring">"Meter"</span>,<span class="IDLnumber">1.0</span>]]</pre><!--/sphider_noindex-->
+                        <p>See Coordinate System Strings and Codes for more information.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">data gain values</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Gain values for each band. Units are W/(m<span style="vertical-align: super;">2</span> * µm * sr).</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="data_ignore_value"></a><span style="font-family: monospace">data ignore value</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Pixel values that should be ignored in image processing. </p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">data offset values</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Offset values for each band.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">data reflectance gain values</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>An array of reflectance gain values. </p>
+                        <p>With Landsat-8 files, the reflectance gains have been scaled by the sine of the sun elevation, as follows:</p><!--sphider_noindex--><pre>data reflectance gain values = REFLECTANCE_MULT_BAND_1/<span class="IDLsysFunc hint--top hint--rounded hint--bounce" data-hint="Returns the trigonometric sine of X.">sin</span>(sun elevation)</pre><!--/sphider_noindex-->
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">data reflectance offset values</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>An array of reflectance offset values. With Landsat-8 files, the reflectance offsets have been scaled by the sine of the sun elevation, as follows:</p><!--sphider_noindex--><pre>data reflectance offset values = REFLECTANCE_ADD_BAND_1/<span class="IDLsysFunc hint--top hint--rounded hint--bounce" data-hint="Returns the trigonometric sine of X.">sin</span>(sun elevation)</pre><!--/sphider_noindex-->
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="data_type"></a><span style="font-family: monospace">data type</span>
+                        </p>
+                        <p style="text-align: center;">(required)</p>
+                    </td>                     <td class="IDLTable">
+                        <p>The type of data representation:</p>
+                        <ul>
+                            <li value="1">1 = Byte:&nbsp;8-bit unsigned integer</li>
+                            <li value="2">2 = Integer: 16-bit signed integer</li>
+                            <li value="3">3 = Long:&nbsp;32-bit signed integer</li>
+                            <li value="4">4 = Floating-point: 32-bit single-precision</li>
+                            <li value="5">5 = Double-precision: 64-bit double-precision floating-point</li>
+                            <li value="6">6 = Complex: Real-imaginary pair of single-precision floating-point</li>
+                            <li value="7">9 = Double-precision complex: Real-imaginary pair of double precision floating-point</li>
+                            <li value="8">12 = Unsigned integer: 16-bit</li>
+                            <li value="9">13 = Unsigned long integer: 32-bit</li>
+                            <li value="10">14 = 64-bit long integer (signed)</li>
+                            <li value="11">15 = 64-bit unsigned long integer (unsigned)</li>
+                        </ul>                     </td>                 </tr>
+                <tr>                     <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">default bands</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Indicates which band numbers to automatically load into the Data Manager <b>Greyscale</b> or <b>R</b>, <b>G</b>, and <b>B</b> fields every time the file is opened. By default, a new image is automatically loaded when a file that has default bands defined in its header is opened. If only one band number is used, then ENVI loads a greyscale image.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">default stretch</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>The type of stretch to use when ENVI displays the image. The choices are as follows:</p>
+                        <ul>
+                            <li value="1"><span style="font-family: monospace">bipolar</span>
+                            </li>
+                            <li value="2"><span style="font-family: monospace">equalization</span>: You can optionally enter a minimum and maximum pixel value to use in the stretch. For multi-band images, these values will apply to all of the bands. You cannot set individual minimum/maximum values for each band. Here is an example: <span style="font-family: monospace">equalization 0 200</span>.</li>
+                            <li value="3"><span style="font-family: monospace">Gaussian</span>: Optionally enter the standard deviation to use; for example: <span style="font-family: monospace">0.3 Gaussian</span>. You can optionally enter a minimum and maximum pixel value to use in the stretch. For multi-band images, these values will apply to all of the bands. You cannot set individual minimum/maximum values for each band. Here is an example: <span style="font-family: monospace">0.3 Gaussian 0 1000</span>.</li>
+                            <li value="4"><span style="font-family: monospace">linear</span>: Optionally specify the percentage of the data to clip; for example: <span style="font-family: monospace">5.0 linear</span>. Or, enter the minimum and maximum pixel values to use in the stretch; for example: <span style="font-family: monospace">0 200 linear</span>.</li>
+                            <li value="5"><span style="font-family: monospace">logarithmic</span>: You can optionally enter a minimum and maximum pixel value to use in the stretch. For multi-band images, these values will apply to all of the bands. You cannot set individual minimum/maximum values for each band. Here is an example: <span style="font-family: monospace">logarithmic 0 1000</span>.</li>
+                            <li value="6"><span style="font-family: monospace">optimized linear</span>
+                            </li>
+                            <li value="7"><span style="font-family: monospace">square root</span>: Optionally enter the square root factor to use; for example: <span style="font-family: monospace">0.5 square root</span>. You can optionally enter a minimum and maximum pixel value to use in the stretch. For multi-band images, these values will apply to all of the bands. You cannot set individual minimum/maximum values for each band. Here is an example: <span style="font-family: monospace">0.5 square root 0 200</span>.</li>
+                        </ul>                     </td>                 </tr>
+                <tr>                     <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">dem band</span>
+                        </p>                     </td>
+                    <td class="IDLTable">Index (starting at 1) of a selected DEM band associated with the image. The <span style="font-family: monospace">dem band</span> is not written if the DEM file contains a single band, or if the first band of an image was chosen. In these cases, the <span style="font-family: monospace">dem band</span> value defaults to 0.</td>
+                </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">dem file</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Path and filename of a DEM associated with the image.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="description"></a><span style="font-family: monospace">description</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>A string describing the image or the processing performed.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="file_type"></a><span style="font-family: monospace">file type</span>
+                        </p>
+                        <p style="text-align: center;">(required)</p>
+                    </td>                     <td class="IDLTable">
+                        <p>The ENVI-defined file type, such as a certain data format and processing result. The available file types are listed in the <span style="font-family: monospace">filetype.txt</span> file (see File Type File). The file type ASCII string must exacly match an entry in the <span style="font-family: monospace">filetype.txt</span> file, including the proper case.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">fwhm</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Lists full-width-half-maximum (FWHM) values of each band in an image. Units should be the same as those used for wavelength and set in the wavelength units parameter.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">geo points</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Geographic corners for non-georeferenced files. Enter one to four locations. Each location must contain the following items, in this order:</p>
+                        <p><i>pixel_x_coordinate</i>, <i>pixel_y_coordinate</i>, <i>latitude</i>, <i>longitude</i></p>
+                        <p>For example:</p><!--sphider_noindex--><pre>geo points = {</pre><!--/sphider_noindex--><!--sphider_noindex--><pre><span class="IDLnumber">1.0000</span>, <span class="IDLnumber">1.0000</span>, <span class="IDLnumber">32.89380137</span>, -<span class="IDLnumber">117.07201460</span>,</pre><!--/sphider_noindex--><!--sphider_noindex--><pre><span class="IDLnumber">1002.0000</span>, <span class="IDLnumber">1.0000</span>, <span class="IDLnumber">32.87364744</span>, -<span class="IDLnumber">116.95855862</span>,</pre><!--/sphider_noindex--><!--sphider_noindex--><pre><span class="IDLnumber">1.0000</span>, <span class="IDLnumber">1002.0000</span>, <span class="IDLnumber">32.80628336</span>, -<span class="IDLnumber">117.09960891</span>,</pre><!--/sphider_noindex--><!--sphider_noindex--><pre><span class="IDLnumber">1002.0000</span>, <span class="IDLnumber">1002.0000</span>, <span class="IDLnumber">32.78615422</span>, -<span class="IDLnumber">116.98625969</span>}</pre><!--/sphider_noindex-->
+                        <p>Pixel coordinates [1,1] correspond to the top-left corner of the image.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="header_offset"></a><span style="font-family: monospace">header offset</span>
+                        </p>
+                        <p style="text-align: center;">(required)</p>
+                    </td>                     <td class="IDLTable">
+                        <p>The number of bytes of embedded header information present in the file. ENVI skips these bytes when reading the file. The default value is 0 bytes.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="interleave"></a><span style="font-family: monospace">interleave</span>
+                        </p>
+                        <p style="text-align: center;">(required)</p>
+                    </td>                     <td class="IDLTable">
+                        <p>Refers to whether the data interleave is BSQ, BIL, or BIP.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="lines"></a>lines</p>
+                        <p style="text-align: center;">(required)</p>
+                    </td>                     <td class="IDLTable">
+                        <p>The number of lines per image for each band.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">map info</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Lists geographic information in the following order:</p>
+                        <ul>
+                            <li value="1">Projection name</li>
+                            <li value="2">Reference (tie point) pixel <b>x</b> location (in file coordinates)</li>
+                            <li value="3">Reference (tie point) pixel <b>y</b> location (in file coordinates)</li>
+                            <li value="4">Pixel easting</li>
+                            <li value="5">Pixel northing</li>
+                            <li value="6">x pixel size</li>
+                            <li value="7">y pixel size</li>
+                            <li value="8">Projection zone (UTM only)</li>
+                            <li value="9">North or South (UTM only)</li>
+                            <li value="10">Datum</li>
+                            <li value="11">Units</li>
+                        </ul>                     </td>                 </tr>
+                <tr>                     <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">pixel size</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Indicates x and y pixel size in meters for non-georeferenced files.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">projection info</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>If you defined a custom projection in ENVI Classic, this field contains that map information. A <span style="font-family: monospace">projection info line</span> is added to the ENVI header file if the image uses a user-defined projection instead of a standard projection defined in the file <span style="font-family: monospace">map_proj.txt</span> file of the ENVI distribution. If the header file contains a <span style="font-family: monospace">coordinate system string</span> field, any existing <span style="font-family: monospace">projection info line</span> information is ignored.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">read procedures</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>The names of spatial and spectral read routines used in ENVI&nbsp;Classic custom file readers.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">reflectance scale factor</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>The value that, when divided into your data, would scale it from 0-1 reflectance. For example, if the value of 10,000 in your data represents a reflectance value of 1.0, enter a reflectance scale factor of 10,000.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">rpc info</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Lists Rational Polynomial Coefficient (RPC) geolocation information for files that have RPC reference information instead of a standard map projection.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="samples"></a><span style="font-family: monospace">samples</span>
+                        </p>
+                        <p style="text-align: center;">(required)</p>
+                    </td>                     <td class="IDLTable">
+                        <p>The number of samples (pixels) per image line for each band.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">security tag</span>
+                        </p>                     </td>
+                    <td class="IDLTable">A string with security information inherited from formats that typically contain security classification levels (such as NITF). </td>
+                </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">sensor type</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Instrument types, such as Landsat TM, SPOT, RADARSAT, and so on. The available sensor types are listed in the <span style="font-family: monospace">sensor.txt</span> file described in ENVI Sensor File. The string must exactly match an entry in the <span style="font-family: monospace">sensor.txt</span> file, including proper case.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">solar irradiance</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Top of the atmosphere solar irradiance per band. Units are W/(m<sup>2</sup> * µm).</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">spectra names</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>A comma-separated list of spectra names enclosed in {curly brackets}; for spectral library files only.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">sun azimuth</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Angle of the sun (in degrees) from due north in a clockwise direction.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">sun elevation</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Angle of the sun (in degrees) above the horizon.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">wavelength</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Lists the center wavelength values of each band in an image. Units should be the same as those used for the <span style="font-family: monospace">fwhm</span> field and set in the wavelength units parameter.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="wavelength_units"></a><span style="font-family: monospace">wavelength units</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Text string indicating the wavelength units. ENVI&nbsp;accepts the following strings:</p>
+                        <!--sphider_noindex--><pre>Micrometers</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>um</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>Nanometers</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>nm</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>Millimeters</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>mm</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>Centimeters</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>cm</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>Meters</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>m</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>Wavenumber</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>Angstroms</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>GHz</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>MHz</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>Index</pre><!--/sphider_noindex-->
+                        <!--sphider_noindex--><pre>Unknown</pre><!--/sphider_noindex-->
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><a name="xstart_ystart"></a><span style="font-family: monospace">x start</span>
+                        </p>
+                        <p style="text-align: center;">
+                            <br><span style="font-family: monospace">y start</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>Defines the image coordinates for the upper-left pixel in the image. Images that are spatial subsets of larger images often use an image coordinate system that references the parent (or larger) image so that you can link and dynamically overlay the two images. The default values for the upper-left pixel are (0,0).</p>
+                        <p>The reference (tie point) pixels in the <span style="font-family: monospace">map info</span> header field are one-based.</p>
+                        <p>Changing these values does not affect the way ENVI reads the image data from the file.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">z plot average</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>The number of pixels in the x and y directions to average for Z plots.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">z plot range</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>The default minimum and maximum values for Z plots.</p>
+                    </td>                 </tr>                 <tr>
+                    <td class="IDLTable">
+                        <p style="text-align: center;"><span style="font-family: monospace">z plot titles</span>
+                        </p>                     </td>
+                    <td class="IDLTable">
+                        <p>The x and y axis titles for Z plots.</p>
+                    </td>                 </tr>             </tbody>
+        </table>
+ </body>
+</html>
