@@ -4,6 +4,8 @@
 #include "mpfit.h"
 #include "common_types.h"
 #include "math.h"
+#include "LeastSquareSolver.h"
+#include "DBJson.h"
 #include <vector>
 #include <array>
 #include <cmath>
@@ -11,6 +13,9 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QtMath>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 
 namespace{
 using std::vector;
@@ -24,18 +29,6 @@ constexpr double pi = 3.14159265358979323846;
 vector <double>  dark_pixel = {39.535587, 25.645323, 11.881793, 4.310712};
 double mu_0 = qCos(qDegreesToRadians(41.3));
 static result_values rv;
-
-
-
-
-vector<vector<double>> S_lambda_lists(4);
-vector<double> T_H2O_list;
-vector<double> lambda_list;
-vector<double> T_O2_list;
-vector<double> T_O3_list;
-vector<double> B_lambda_teta_list;
-vector<double> divider_list;
-vector<double> tau_m;
 
 void loadList(QString path,vector<double>&list);
 void loadBkaList(QString path, vector<double> &m_bkaList);
@@ -58,6 +51,31 @@ void loadAllLists()
     loadList(":/sattelites_params/sun.txt",B_lambda_teta_list);
     calculDividerList(S_lambda_lists);
     tau_m = compute_tau_m(lambda_list);
+
+    QJsonArray bka_array;
+    QJsonArray common_params;
+    for(size_t j=0;j<S_lambda_lists[0].size();++j){
+    QJsonObject obj_response;
+    QJsonObject params;
+    QJsonArray jarr;
+    obj_response["wavelength"] = lambda_waves[j];
+    params["wavelength"] = lambda_waves[j];
+    params["h2o"] = T_H2O_list[j];
+    params["o2"] = T_O2_list[j];
+    params["o3"] = T_O3_list[j];
+    params["sun"] = B_lambda_teta_list[j];
+    common_params.append(params);
+    for(size_t i=0;i<4;++i){
+     jarr.append(S_lambda_lists[i][j]);
+    }
+    obj_response["response"] = jarr;
+    bka_array.append(obj_response);
+    }
+    QJsonObject obj;
+    obj.insert("bka_bands",bka_array);
+
+    db_json::saveJsonObjectToFile("bka.json",obj,QJsonDocument::Indented);
+    db_json::saveJsonArrayToFile("common.json",common_params,QJsonDocument::Indented);
 }
 
 void loadList(QString path,vector<double>&list)
@@ -80,6 +98,7 @@ void loadList(QString path,vector<double>&list)
 
 void loadBkaList(QString path, vector<double> &m_bkaList)
 {
+    bool static isfillWaves = true;
     QFile file(path);
     if(!file.open(QIODevice::ReadOnly)){
 
@@ -90,13 +109,19 @@ void loadBkaList(QString path, vector<double> &m_bkaList)
     while(qts.readLineInto(&line)){
         double var2;
         QStringList twoParams = line.split("\t");
-        if(twoParams.count()==2)
+        if(twoParams.count()==2){
             var2 = twoParams.at(1).toDouble();
-        else
+            if(isfillWaves){
+            lambda_waves.push_back(twoParams.at(0).toDouble());
+            }
+        }
+        else{
             var2 = line.toDouble();
+        }
         m_bkaList.push_back(var2);
     }
     file.close();
+    isfillWaves = false;
     qDebug()<<"List "<<path<<" "<<m_bkaList.size();
 }
 
@@ -454,6 +479,8 @@ namespace lss{
 
 void setElevationAngle(const double &elAngle){
     mu_0 = qCos(qDegreesToRadians(elAngle));
+    qDebug()<<"elevation angle: "<<elAngle;
+    qDebug()<<"cos mu_0: "<<mu_0;
 }
 
 struct vars_struct {
@@ -464,10 +491,10 @@ struct vars_struct {
 };
 
 /*struct result_values{
-    double tau_0_a;
-    double beta;
-    double g;
-    double albedo;
+    double tau_0_a; // фикс при вычеслении lookup table
+    double beta;    // фикс при вычеслении lookup table
+    double g;       // фикс при вычеслении lookup table
+    double albedo;  // искомое для матрицы
 };*/
 
 /* Simple routine to print the fit results */
@@ -590,9 +617,8 @@ result_values optimize(std::array<double,4>blacks)
 
     status = mpfit(quadfunc, 4, 4, p, pars, 0, (void *) &v, &result);
 
-    //qDebug()<<"\nSTATUS: "<<status;
-    //qDebug()<<"VALUES: "<<p[0]<<p[1]<<p[2]<<p[3];
-
+    qDebug()<<"\nSTATUS: "<<status;
+    qDebug()<<"VALUES: "<<p[0]<<p[1]<<p[2]<<p[3];
 
     rv.tau_0_a = p[0];
     rv.beta = p[1];

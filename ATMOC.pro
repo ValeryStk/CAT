@@ -6,6 +6,7 @@ DEFINES += QT_MESSAGELOGCONTEXT
 
 SOURCES += \
         CompMonitor.cpp \
+        DBJson.cpp \
         EnviModule.cpp \
         EnviReader.cpp \
         LeastSquareSolver.cpp \
@@ -16,8 +17,10 @@ SOURCES += \
 
 HEADERS += \
     CompMonitor.h \
+    DBJson.h \
     EnviModule.h \
     EnviReader.h \
+    LeastSquareSolver.h \
     PolygonCollisionChecker.h \
     QrcFilesRestorer.h \
     Sounder.h \
