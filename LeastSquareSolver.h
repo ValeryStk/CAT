@@ -4,7 +4,8 @@
 #include <vector>
 using std::vector;
 
-vector<vector<double>> S_lambda_lists(4);
+vector<vector<double>> S_lambda_lists_bka(4);
+vector<vector<double>> S_lambda_lists_sentinel(4);
 vector<double> lambda_waves;
 vector<double> T_H2O_list;
 vector<double> lambda_list;

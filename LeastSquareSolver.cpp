@@ -39,43 +39,52 @@ inline vector <double> compute_tau_m(const vector<double> &list);
 
 void loadAllLists()
 {
-
-    loadBkaList(":/sattelites_params/bka/i1.txt",S_lambda_lists[0]);//bka//sentinel
-    loadBkaList(":/sattelites_params/bka/i2.txt",S_lambda_lists[1]);
-    loadBkaList(":/sattelites_params/bka/i3.txt",S_lambda_lists[2]);
-    loadBkaList(":/sattelites_params/bka/i4.txt",S_lambda_lists[3]);
+    //S_lambda_lists_sentinel
+    loadBkaList(":/sattelites_params/bka/i1.txt",S_lambda_lists_bka[0]);//bka
+    loadBkaList(":/sattelites_params/bka/i2.txt",S_lambda_lists_bka[1]);
+    loadBkaList(":/sattelites_params/bka/i3.txt",S_lambda_lists_bka[2]);
+    loadBkaList(":/sattelites_params/bka/i4.txt",S_lambda_lists_bka[3]);
+    loadBkaList(":/sattelites_params/sentinel/i1.txt",S_lambda_lists_sentinel[0]);//sentinel
+    loadBkaList(":/sattelites_params/sentinel/i2.txt",S_lambda_lists_sentinel[1]);
+    loadBkaList(":/sattelites_params/sentinel/i3.txt",S_lambda_lists_sentinel[2]);
+    loadBkaList(":/sattelites_params/sentinel/i4.txt",S_lambda_lists_sentinel[3]);
     loadList(":/sattelites_params/h2o.txt",T_H2O_list);
     loadList(":/sattelites_params/lmb.txt",lambda_list);
     loadList(":/sattelites_params/o2.txt",T_O2_list);
     loadList(":/sattelites_params/o3.txt",T_O3_list);
     loadList(":/sattelites_params/sun.txt",B_lambda_teta_list);
-    calculDividerList(S_lambda_lists);
+    calculDividerList(S_lambda_lists_bka);
     tau_m = compute_tau_m(lambda_list);
 
     QJsonArray bka_array;
     QJsonArray common_params;
-    for(size_t j=0;j<S_lambda_lists[0].size();++j){
+    for(size_t j=0;j<S_lambda_lists_bka[0].size();++j){
     QJsonObject obj_response;
     QJsonObject params;
-    QJsonArray jarr;
+    QJsonArray jarr_bka;
+    QJsonArray jarr_sentinel;
     obj_response["wavelength"] = lambda_waves[j];
     params["wavelength"] = lambda_waves[j];
     params["h2o"] = T_H2O_list[j];
     params["o2"] = T_O2_list[j];
     params["o3"] = T_O3_list[j];
     params["sun"] = B_lambda_teta_list[j];
-    common_params.append(params);
+
     for(size_t i=0;i<4;++i){
-     jarr.append(S_lambda_lists[i][j]);
+     jarr_bka.append(S_lambda_lists_bka[i][j]);
+     jarr_sentinel.append(S_lambda_lists_sentinel[i][j]);
     }
-    obj_response["response"] = jarr;
+    obj_response["response"] = jarr_bka;
+    params["_bka"] = jarr_bka;
+    params["_sentinel"] = jarr_sentinel;
+    common_params.append(params);
     bka_array.append(obj_response);
     }
     QJsonObject obj;
     obj.insert("bka_bands",bka_array);
 
     db_json::saveJsonObjectToFile("bka.json",obj,QJsonDocument::Indented);
-    db_json::saveJsonArrayToFile("common.json",common_params,QJsonDocument::Indented);
+    db_json::saveJsonArrayToFile("common_compact.json",common_params,QJsonDocument::Compact);
 }
 
 void loadList(QString path,vector<double>&list)
@@ -544,7 +553,7 @@ int quadfunc(int m, int n, double *p, double *dy, double **dvec, void *vars)
                          T_O2_list,
                          T_O3_list,
                          T_H2O_list,
-                         S_lambda_lists,
+                         S_lambda_lists_bka,
                          mu_0,
                          albedo,
                          tau_0_a,
