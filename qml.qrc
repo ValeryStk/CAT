@@ -63,5 +63,6 @@
         <file>sattelites_params/bka/i2.txt</file>
         <file>sattelites_params/bka/i3.txt</file>
         <file>sattelites_params/bka/i4.txt</file>
+        <file>_4release/_4restoring/sdb.json</file>
     </qresource>
 </RCC>

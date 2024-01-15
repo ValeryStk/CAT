@@ -13,7 +13,8 @@ SOURCES += \
         QrcFilesRestorer.cpp \
         Sounder.cpp \
         main.cpp \
-        mpfit.c
+        mpfit.c \
+        satellite_adder.cpp
 
 HEADERS += \
     CompMonitor.h \
@@ -28,7 +29,8 @@ HEADERS += \
     UniversalImageReader.h \
     Version.h \
     common_types.h \
-    mpfit.h
+    mpfit.h \
+    satellite_adder.h
 
 RESOURCES += qml.qrc
 

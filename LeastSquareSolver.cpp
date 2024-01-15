@@ -16,6 +16,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+#include "satellite_adder.h"
 
 namespace{
 using std::vector;
@@ -84,7 +85,13 @@ void loadAllLists()
     obj.insert("bka_bands",bka_array);
 
     db_json::saveJsonObjectToFile("bka.json",obj,QJsonDocument::Indented);
-    db_json::saveJsonArrayToFile("common_compact.json",common_params,QJsonDocument::Compact);
+    db_json::saveJsonArrayToFile("common_compact.json",common_params,QJsonDocument::Indented);
+    cat::add_new_satellite("landsat8");
+    //cat::add_new_satellite("landsat9");
+    //cat::add_new_satellite("sentinel2a-10m");
+    //cat::add_new_satellite("sentinel2a-20m");
+    //cat::add_new_satellite("sentinel2b-10m");
+    //cat::add_new_satellite("sentinel2b-20m");
 }
 
 void loadList(QString path,vector<double>&list)
