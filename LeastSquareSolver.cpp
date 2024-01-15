@@ -87,11 +87,11 @@ void loadAllLists()
     db_json::saveJsonObjectToFile("bka.json",obj,QJsonDocument::Indented);
     db_json::saveJsonArrayToFile("common_compact.json",common_params,QJsonDocument::Indented);
     cat::add_new_satellite("landsat8");
-    //cat::add_new_satellite("landsat9");
-    //cat::add_new_satellite("sentinel2a-10m");
-    //cat::add_new_satellite("sentinel2a-20m");
-    //cat::add_new_satellite("sentinel2b-10m");
-    //cat::add_new_satellite("sentinel2b-20m");
+    cat::add_new_satellite("landsat9");
+    cat::add_new_satellite("sentinel2a-10m");
+    cat::add_new_satellite("sentinel2a-20m");
+    cat::add_new_satellite("sentinel2b-10m");
+    cat::add_new_satellite("sentinel2b-20m");
 }
 
 void loadList(QString path,vector<double>&list)
@@ -584,7 +584,11 @@ int quadfunc(int m, int n, double *p, double *dy, double **dvec, void *vars)
 
 result_values optimize(std::array<double,4>blacks)
 {
+    static bool is_first_run = true;
+    if(is_first_run){
     loadAllLists();
+    is_first_run = false;
+    }
     double p[] =      {0.1, 2, 0.01, 0.01};//{0.1, 2, 0.01, 0.01};               /* Initial conditions */
     dark_pixel = {blacks[0],blacks[1],blacks[2],blacks[3]};
     double perror[4];		                                 /* Returned parameter errors */

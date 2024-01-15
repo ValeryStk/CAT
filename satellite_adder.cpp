@@ -30,7 +30,6 @@ void loadList(QString path, std::vector<double> &list)
 bool add_new_satellite(const QString& pathToFolder){
     bool result = false;
     QDir dir(pathToFolder);
-    //dir.setFilter(QDir::NoDotAndDotDot);
     if(!dir.exists()){
         return result;
     }
@@ -39,8 +38,8 @@ bool add_new_satellite(const QString& pathToFolder){
 
     QStringList files;
     vector<vector<double>> channels;
-    files = dir.entryList();
-    for(int i=2;i<files.size();++i){
+    files = dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+    for(int i=0;i<files.size();++i){
      vector<double> band_data;
      loadList(satellite_name+"\\"+files[i],band_data);
      channels.push_back(band_data);
@@ -50,7 +49,7 @@ bool add_new_satellite(const QString& pathToFolder){
     for(size_t k=0;k<channels[0].size();++k){
     QJsonArray jarr;
     for(size_t j=0;j<channels.size();++j){
-    jarr.append(channels[k][j]);
+    jarr.append(channels[j][k]);
     }
     auto obj = root_obj[k].toObject();
     if(satellite_name.length()>0){
@@ -59,7 +58,7 @@ bool add_new_satellite(const QString& pathToFolder){
     obj[satellite_name] = jarr;
     root_obj[k] = obj;
     }
-    db_json::saveJsonArrayToFile("sdb.json",root_obj,QJsonDocument::Indented);
+    db_json::saveJsonArrayToFile("sdb.json",root_obj,QJsonDocument::Compact);
     return result;
 }
 }
