@@ -43,7 +43,7 @@ def print_welcome():
     print(bcolors.OKCYAN+
           bcolors.BOLD+
           "\n*********************************\n*     cat script is running     *\n*********************************"+bcolors.ENDC)
-    print ("Enter satellite name: _bka _landsat8 _landsat9 _sentinel _sentinel2a-10m _sentinel2a-20m _sentinel2b-10m _sentinel2b-20m")
+    print ("Available satellite names: _bka _landsat8 _landsat9 _sentinel _sentinel2a-10m _sentinel2a-20m _sentinel2b-10m _sentinel2b-20m")
 
 def print_cos_zenith_angle():
     print(bcolors.WARNING+"\nКосинус зенитного угла Солнца: \n"+bcolors.ENDC, mu_0)
@@ -60,7 +60,6 @@ def printFilesReadingInfo():
     print('Dividers:             {0}'.format(divider_list))
 
 def printResults():
-    #print(x)
     print(bcolors.WARNING + "\nРезультаты расчетов: "+ bcolors.ENDC)
     print('tau_0_a = ', round(x.x[0], 4),
           '\nbeta = ',  round(x.x[1], 4),
@@ -77,8 +76,6 @@ def assertListsSizes():
     assert NUMBER_OF_WAVELENGTH == len(T_H2O_list)
     assert NUMBER_OF_WAVELENGTH == len(S_lambda_lists[0])
     assert NUMBER_OF_WAVELENGTH == len(B_lambda_teta_list)
-
-
 
 # Calculate errors with C++ catlib
 def equasion(var):
@@ -118,7 +115,7 @@ if __name__ == '__main__':
     # dark pixel test data
     dark_pixel = [39.535587, 25.645323, 11.881793, 4.310712]
 
-    # load data from files
+    # load data from sdb.json file
     sdb = json.load(open('sdb.json'))
     lambda_list        = [float(i['wavelength']) for i in sdb]
     S_lambda_lists     = load_S_lambda_lists()
