@@ -5,7 +5,9 @@ import time
 import json
 import catlib
 
+#test data example: satellite name: _bka, sun zenith angle: 41.3, dark_pixel = [39.535587, 25.645323, 11.881793, 4.310712]
 
+#constants
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -17,22 +19,15 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+NUMBER_OF_WAVELENGTH = 601
+
 def load_S_lambda_lists():
     lists = []
     for i in range(len(dark_pixel)):
-        lines = [float(j['_bka'][i]) for j in sdb]
-        list_ = []
-        for l in lines:
-            not_added = True
-            while not_added:
-                try:
-                    list_.append(float(l))
-                    not_added = False
-                except:
-                    l = l[1:]
-        lists.append(list_)
+        lines = [float(j[satellite_name][i]) for j in sdb]
+        lists.append(lines)
     for l in lists:
-        assert len(l) == len(lists[0])
+        assert len(l) == NUMBER_OF_WAVELENGTH
     return lists
 
 def compute_divider_list(S_lambda_lists):
@@ -48,13 +43,14 @@ def print_welcome():
     print(bcolors.OKCYAN+
           bcolors.BOLD+
           "\n*********************************\n*     cat script is running     *\n*********************************"+bcolors.ENDC)
+    print ("Enter satellite name: _bka _landsat8 _landsat9 _sentinel _sentinel2a-10m _sentinel2a-20m _sentinel2b-10m _sentinel2b-20m")
 
 def print_cos_zenith_angle():
     print(bcolors.WARNING+"\nКосинус зенитного угла Солнца: \n"+bcolors.ENDC, mu_0)
     
 def printFilesReadingInfo():
     print(bcolors.WARNING+'\nLoaded files information:'+bcolors.ENDC)
-    print('Lambdas loaded:       {0}'.format(list_size))
+    print('Lambdas loaded:       {0}'.format(len(lambda_list)))
     print('T_O2 loaded:          {0}'.format(len(T_O2_list)))
     print('T_O3 loaded:          {0}'.format(len(T_O3_list)))
     print('T_H2O loaded:         {0}'.format(len(T_H2O_list)))
@@ -76,11 +72,11 @@ def printResults():
     print("\n")
 
 def assertListsSizes():
-    assert list_size == len(T_O2_list)
-    assert list_size == len(T_O3_list)
-    assert list_size == len(T_H2O_list)
-    assert list_size == len(S_lambda_lists[0])
-    assert list_size == len(B_lambda_teta_list)
+    assert NUMBER_OF_WAVELENGTH == len(T_O2_list)
+    assert NUMBER_OF_WAVELENGTH == len(T_O3_list)
+    assert NUMBER_OF_WAVELENGTH == len(T_H2O_list)
+    assert NUMBER_OF_WAVELENGTH == len(S_lambda_lists[0])
+    assert NUMBER_OF_WAVELENGTH == len(B_lambda_teta_list)
 
 
 
@@ -112,9 +108,11 @@ if __name__ == '__main__':
     
     #welcome message
     print_welcome()
+    satellite_name = input("enter satellite name: ")
 
     # sun zenith angle
-    mu_0 = np.cos(np.deg2rad(41.3))
+    angle = float(input("enter sun zenith angle: "))
+    mu_0 = np.cos(np.deg2rad(angle))
     print_cos_zenith_angle()
 
     # dark pixel test data
@@ -123,7 +121,6 @@ if __name__ == '__main__':
     # load data from files
     sdb = json.load(open('sdb.json'))
     lambda_list        = [float(i['wavelength']) for i in sdb]
-    list_size          = len(lambda_list)
     S_lambda_lists     = load_S_lambda_lists()
     divider_list       = compute_divider_list(S_lambda_lists)
     T_O2_list          = [float(i['o2']) for i in sdb]
