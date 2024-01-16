@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-
-from math import pi
 import numpy as np
 import scipy.optimize
-from tqdm import tqdm
 import time
+import json
 import catlib
 
 
@@ -19,31 +17,10 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-def load_T_O2_list():
-    lines = open('files/o2.txt').readlines()
-    return [float(l) for l in lines]
-
-def load_T_O3_list():
-    lines = open('files/o3.txt').readlines()
-    return [float(l) for l in lines]
-
-def load_T_H2O_list():
-    lines = open('files/h2o.txt').readlines()
-    return [float(l) for l in lines]
-
-def load_lambda_list():
-    lines = open('files/lmb.txt').readlines()
-    return [float(l) for l in lines]
-
-def load_B_lambda_teta_list():
-    lines = open('files/sun.txt').readlines()
-    return [float(l) for l in lines]
-
 def load_S_lambda_lists():
     lists = []
     for i in range(len(dark_pixel)):
-        file_name = 'files/i{0}.txt'.format(i+1)
-        lines = open(file_name).readlines()
+        lines = [float(j['_bka'][i]) for j in sdb]
         list_ = []
         for l in lines:
             not_added = True
@@ -144,14 +121,15 @@ if __name__ == '__main__':
     dark_pixel = [39.535587, 25.645323, 11.881793, 4.310712]
 
     # load data from files
-    lambda_list        = load_lambda_list()
+    sdb = json.load(open('sdb.json'))
+    lambda_list        = [float(i['wavelength']) for i in sdb]
     list_size          = len(lambda_list)
     S_lambda_lists     = load_S_lambda_lists()
     divider_list       = compute_divider_list(S_lambda_lists)
-    T_O2_list          = load_T_O2_list()
-    T_O3_list          = load_T_O3_list()
-    T_H2O_list         = load_T_H2O_list()
-    B_lambda_teta_list = load_B_lambda_teta_list()
+    T_O2_list          = [float(i['o2']) for i in sdb]
+    T_O3_list          = [float(i['o3']) for i in sdb]
+    T_H2O_list         = [float(i['h2o']) for i in sdb]
+    B_lambda_teta_list = [float(i['sun']) for i in sdb]
 
     # check lists sizes
     assertListsSizes()
