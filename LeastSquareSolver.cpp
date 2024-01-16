@@ -84,8 +84,8 @@ void loadAllLists()
     QJsonObject obj;
     obj.insert("bka_bands",bka_array);
 
-    db_json::saveJsonObjectToFile("bka.json",obj,QJsonDocument::Indented);
-    db_json::saveJsonArrayToFile("common_compact.json",common_params,QJsonDocument::Indented);
+    //db_json::saveJsonObjectToFile("bka.json",obj,QJsonDocument::Indented);
+    //db_json::saveJsonArrayToFile("common_compact.json",common_params,QJsonDocument::Indented);
     cat::add_new_satellite("landsat8");
     cat::add_new_satellite("landsat9");
     cat::add_new_satellite("sentinel2a-10m");
