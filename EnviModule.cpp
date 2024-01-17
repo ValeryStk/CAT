@@ -406,10 +406,12 @@ void EnviModule::taskForDarkSearchingFinished(bool result, DarkPoint dp, QString
   m_dp = dp;
   qDebug() << "hdr sun elevation: " << m_envi.getEnviHeader().sunElevationAngle;
   lss::setElevationAngle(m_envi.getEnviHeader().sunElevationAngle);
-  m_calculeted_values = lss::optimize({dp.chanelsValues[0].toDouble(),
-                                       dp.chanelsValues[1].toDouble(),
-                                       dp.chanelsValues[2].toDouble(),
-                                       dp.chanelsValues[3].toDouble()});
+  m_calculeted_values = lss::optimize("_bka", {
+    dp.chanelsValues[0].toDouble(),
+      dp.chanelsValues[1].toDouble(),
+      dp.chanelsValues[2].toDouble(),
+      dp.chanelsValues[3].toDouble()
+  });
   isDarkMarker = true;
   this->update();
   emit showDarkPoint();

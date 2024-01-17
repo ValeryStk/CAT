@@ -40,7 +40,9 @@ inline vector <double> compute_tau_m(const vector<double>& list);
 
 void loadAllLists() {
   db_json::getJsonArrayFromFile("sdb.json", sdb);
+  db_json::getJsonObjectFromFile("satellites.json", satellites);
   qDebug() << "sdb size: " << sdb.size();
+  qDebug() << "satellites: " << satellites.size();
   for (int i = 0; i < sdb.size(); ++i) {
     T_H2O_list.push_back(sdb[i].toObject()["h2o"].toDouble());
     T_O2_list.push_back(sdb[i].toObject()["o2"].toDouble());
@@ -301,8 +303,6 @@ inline vector <double> compute_w(const double& g,
   return w;
 }
 
-
-
 inline vector <double> compute_T_dif(const double& tau_e,
                                      const double& tau_0_a,
                                      const double& beta,
@@ -322,7 +322,6 @@ inline vector <double> compute_T_dif(const double& tau_e,
   return T_dif;
 }
 
-
 inline vector <double> compute_T_lambda(const double& tau_e,
                                         const double& tau_0_a,
                                         const double& beta,
@@ -339,7 +338,6 @@ inline vector <double> compute_T_lambda(const double& tau_e,
   }
   return T_lmb;
 }
-
 
 inline double compute_B2(const vector <double>& S_lambda_list,
                          const vector <double>& B_lambda_teta_list,
@@ -367,8 +365,6 @@ inline double compute_B2(const vector <double>& S_lambda_list,
   }
   return B2;
 }
-
-
 
 inline double compute_eq(const double& B1,
                          const double& B2,
@@ -418,6 +414,36 @@ void setElevationAngle(const double& elAngle) {
 
 void updateSatelliteResponses(const QString& satellite_name) {
 
+  if (satellite_name == satellite_name_key) {
+    return;
+  }
+  auto a1 = satellites["4"].toArray();
+//auto a2 = satellites["5"].toArray();
+  bool isExists = false;
+  for (int i = 0; i < a1.size(); ++i) {
+    if (i == satellite_name) {
+      isExists = true;
+      break;
+    }
+  }
+  /*if(!isExists){
+      for(int i=0;i<a2.size();++i){
+         if(i==satellite_name){
+           isExists = true;
+           break;
+         }
+      }
+  }*/
+  if (!isExists) {
+    return;
+  }
+  satellite_name_key = satellite_name;
+  for (int i = 0; i < sdb.size(); ++i) {
+    auto response = sdb[i].toObject()[satellite_name_key].toArray();
+    for (int j = 0; j < response.size(); ++j) {
+      S_lambda_lists[j][i] = response[j].toDouble();
+    }
+  }
 }
 
 struct vars_struct {
@@ -434,44 +460,13 @@ struct vars_struct {
     double albedo;  // искомое для матрицы
 };*/
 
-/* Simple routine to print the fit results */
-void printresult(double* x, double* xact, mp_result* result) {
-  int i;
-
-  if ((x == 0) || (result == 0))
-    return;
-  printf("  CHI-SQUARE = %f    (%d DOF)\n",
-         result->bestnorm, result->nfunc - result->nfree);
-  printf("     NPAR    = %d\n", result->npar);
-  printf("     NFREE   = %d\n", result->nfree);
-  printf("     NPEGGED = %d\n", result->npegged);
-  printf("     NITER   = %d\n", result->niter);
-  printf("     NFEV    = %d\n", result->nfev);
-  printf("\n");
-  if (xact) {
-    for (i = 0; i < result->npar; i++) {
-      printf("  P[%d] = %f +/- %f     (ACTUAL %f)\n",
-             i, x[i], result->xerror[i], xact[i]);
-    }
-  } else {
-    for (i = 0; i < result->npar; i++) {
-      printf("  P[%d] = %f +/- %f\n",
-             i, x[i], result->xerror[i]);
-    }
-  }
-  printf("\n");
-}
 
 int quadfunc(int m, int n, double* p, double* dy, double** dvec, void* vars) {
-
-  //printf ("quadfunc %f %f %f %f\n", p[0], p[1], p[2], p[3]);
 
   auto tau_0_a = p[0];
   auto beta    = p[1];
   auto g       = p[2];
   auto albedo  = p[3];
-
-  //qDebug()<<"vals: " << tau_0_a << beta<< g << albedo;
 
   auto eq = compute_EQ(B_lambda_teta_list,
                        T_O2_list,
@@ -499,12 +494,13 @@ int quadfunc(int m, int n, double* p, double* dy, double** dvec, void* vars) {
   return 0;
 }
 
-result_values optimize(std::array<double, 4>blacks) {
+result_values optimize(const QString& sat_name, const std::array<double, 4>& blacks) {
   static bool is_first_run = true;
   if (is_first_run) {
     loadAllLists();
     is_first_run = false;
   }
+  updateSatelliteResponses(sat_name);
   double p[] =      {0.1, 2, 0.01, 0.01};//{0.1, 2, 0.01, 0.01};               /* Initial conditions */
   dark_pixels = {blacks[0], blacks[1], blacks[2], blacks[3]};
   double perror[4];                                    /* Returned parameter errors */

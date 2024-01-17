@@ -51,5 +51,6 @@
         <file>sounds/noSound.mp3</file>
         <file>sounds/soundOn.wav</file>
         <file>_4release/_4restoring/sdb.json</file>
+        <file>_4release/_4restoring/satellites.json</file>
     </qresource>
 </RCC>

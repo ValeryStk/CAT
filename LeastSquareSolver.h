@@ -2,6 +2,7 @@
 #define LEAST_SQUARE_SOLVER
 
 #include <QJsonArray>
+#include <QJsonObject>
 #include <vector>
 using std::vector;
 
@@ -14,6 +15,7 @@ vector<double> T_O3_list;
 vector<double> B_lambda_teta_list;
 vector<double> divider_list;
 vector<double> tau_m;
+QJsonObject satellites;
 QJsonArray sdb;
 QString satellite_name_key = "_bka";
 vector <double>  dark_pixels = {39.535587, 25.645323, 11.881793, 4.310712};
