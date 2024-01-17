@@ -404,6 +404,7 @@ void EnviModule::taskForDarkSearchingFinished(bool result, DarkPoint dp, QString
   pathDark = path;
   emit darkPathWasChanged();
   m_dp = dp;
+  qDebug() << "hdr sun elevation: " << m_envi.getEnviHeader().sunElevationAngle;
   lss::setElevationAngle(m_envi.getEnviHeader().sunElevationAngle);
   m_calculeted_values = lss::optimize({dp.chanelsValues[0].toDouble(),
                                        dp.chanelsValues[1].toDouble(),

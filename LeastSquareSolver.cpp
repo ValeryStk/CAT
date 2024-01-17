@@ -223,7 +223,7 @@ inline vector <double> compute_E_lambda(const double& mu_0,
   vector<double> omega_lambda = compute_omega(TAU_E, tau_0_a, beta, tau_m, list);
   vector<double> g_lmb = compute_g(g, tau_0_a, beta, tau_m, list);
 
-  for (uintmax_t i = 0; i < list.size(); ++i) {
+  for (size_t i = 0; i < list.size(); ++i) {
     auto E_lmb = 4.0 * pi * omega_lambda[i]
                  * mu_0 /
                  (4.0 + 3.0 * (1.0 - g_lmb[i]) * (1.0 - albedo) * tau_lambda[i])
@@ -245,7 +245,7 @@ inline vector <double> compute_u(const double& g,
   vector<double> u;
   vector<double> g_lmb = compute_g(g, tau_0_a, beta, tau_m, list);
 
-  for (uintmax_t i = 0; i < list.size(); ++i) {
+  for (size_t i = 0; i < list.size(); ++i) {
     auto h0 = -1.88227 + 0.53661 * g_lmb[i] - 1.8047 * pow(g_lmb[i], 2) +
               3.26348 * pow(g_lmb[i], 3) - 2.3 * pow(g_lmb[i], 4);
     auto h1 = 5.97763 - 2.04621 * g_lmb[i] - 2.0173 *
@@ -268,7 +268,7 @@ inline vector <double> compute_v(const double& g,
   vector<double> v;
   vector<double> g_lmb = compute_g(g, tau_0_a, beta, tau_m, list);
 
-  for (uintmax_t i = 0; i < list.size(); ++i) {
+  for (size_t i = 0; i < list.size(); ++i) {
     auto ro_0 = 0.4923 + 1.0471 * g_lmb[i] - 2.61112 *
                 pow(g_lmb[i], 2) + 1.53155 * pow(g_lmb[i], 3);
     auto ro_1 = 4.01521 - 0.25886 * g_lmb[i] - 2.85378 *
@@ -411,7 +411,7 @@ inline vector <double> compute_EQ(const vector <double>& B_lambda_teta_list,
 namespace lss {
 
 void setElevationAngle(const double& elAngle) {
-  mu_0 = qCos(qDegreesToRadians(elAngle));
+  mu_0 = qCos(qDegreesToRadians(90 - elAngle));
   qDebug() << "elevation angle: " << elAngle;
   qDebug() << "cos mu_0: " << mu_0;
 }
@@ -555,6 +555,8 @@ result_values optimize(std::array<double, 4>blacks) {
 
   qDebug() << "\nSTATUS: " << status;
   qDebug() << "VALUES: " << p[0] << p[1] << p[2] << p[3];
+  qDebug() << "ERROR: " << rv.err_tau << rv.err_beta << rv.err_g << rv.err_albedo;
+  //printresult()
 
   rv.tau_0_a = p[0];
   rv.beta = p[1];
