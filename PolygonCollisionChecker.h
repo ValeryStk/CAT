@@ -14,7 +14,10 @@ public:
     }
     static std::tuple<bool,int> isPointInPolygons(QPoint &checkPoint,QVector<QPolygon> &polygons){
 
-        if(polygons.isEmpty()){qDebug()<<"No Ignore Polygons!";return {false,-1};};
+        if(polygons.isEmpty()){
+            //qDebug()<<"No Ignore Polygons!";
+            return {false,-1};
+        };
         //qDebug()<<"Check point "<<checkPoint.x()<<" "<<checkPoint.y();
         QVector<QPolygon>::Iterator it = polygons.begin();
         for(;it<polygons.end();++it){

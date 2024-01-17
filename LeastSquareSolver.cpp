@@ -18,146 +18,59 @@
 #include <QJsonObject>
 #include "satellite_adder.h"
 
+
 namespace{
 using std::vector;
+using std::string;
 
+constexpr uint16_t NUMBER_WAVELENGTH = 601;
 constexpr double TAU_M_0 = 0.101;
 constexpr double LAMBDA_0 = 0.55;
 constexpr double P = 1.25;
 constexpr double Q = 1;
 constexpr double TAU_E = 0.04;
 constexpr double pi = 3.14159265358979323846;
-vector <double>  dark_pixel = {39.535587, 25.645323, 11.881793, 4.310712};
+
 double mu_0 = qCos(qDegreesToRadians(41.3));
 static result_values rv;
-
-void loadList(QString path,vector<double>&list);
-void loadBkaList(QString path, vector<double> &m_bkaList);
-void calculDividerList(vector<vector<double> > &allBka);
+void calculDividerList(vector<vector<double> > &responses);
 inline vector <double> compute_tau_m(const vector<double> &list);
 
 
 
 void loadAllLists()
 {
-    //S_lambda_lists_sentinel
-    loadBkaList(":/sattelites_params/bka/i1.txt",S_lambda_lists_bka[0]);//bka
-    loadBkaList(":/sattelites_params/bka/i2.txt",S_lambda_lists_bka[1]);
-    loadBkaList(":/sattelites_params/bka/i3.txt",S_lambda_lists_bka[2]);
-    loadBkaList(":/sattelites_params/bka/i4.txt",S_lambda_lists_bka[3]);
-    loadBkaList(":/sattelites_params/sentinel/i1.txt",S_lambda_lists_sentinel[0]);//sentinel
-    loadBkaList(":/sattelites_params/sentinel/i2.txt",S_lambda_lists_sentinel[1]);
-    loadBkaList(":/sattelites_params/sentinel/i3.txt",S_lambda_lists_sentinel[2]);
-    loadBkaList(":/sattelites_params/sentinel/i4.txt",S_lambda_lists_sentinel[3]);
-    loadList(":/sattelites_params/h2o.txt",T_H2O_list);
-    loadList(":/sattelites_params/lmb.txt",lambda_list);
-    loadList(":/sattelites_params/o2.txt",T_O2_list);
-    loadList(":/sattelites_params/o3.txt",T_O3_list);
-    loadList(":/sattelites_params/sun.txt",B_lambda_teta_list);
-    calculDividerList(S_lambda_lists_bka);
+    db_json::getJsonArrayFromFile("sdb.json",sdb);
+    qDebug()<<"sdb size: "<<sdb.size();
+    for(int i=0;i<sdb.size();++i){
+        T_H2O_list.push_back(sdb[i].toObject()["h2o"].toDouble());
+        T_O2_list.push_back(sdb[i].toObject()["o2"].toDouble());
+        T_O3_list.push_back(sdb[i].toObject()["o3"].toDouble());
+        lambda_list.push_back(sdb[i].toObject()["wavelength"].toDouble());
+        B_lambda_teta_list.push_back(sdb[i].toObject()["sun"].toDouble());
+        auto response = sdb[i].toObject()[satellite_name_key].toArray();
+        for(int j=0;j<response.size();++j){
+            S_lambda_lists[j].push_back(response[j].toDouble());
+        }
+    }
+    calculDividerList(S_lambda_lists);
     tau_m = compute_tau_m(lambda_list);
-
-    QJsonArray bka_array;
-    QJsonArray common_params;
-    for(size_t j=0;j<S_lambda_lists_bka[0].size();++j){
-    QJsonObject obj_response;
-    QJsonObject params;
-    QJsonArray jarr_bka;
-    QJsonArray jarr_sentinel;
-    obj_response["wavelength"] = lambda_waves[j];
-    params["wavelength"] = lambda_waves[j];
-    params["h2o"] = T_H2O_list[j];
-    params["o2"] = T_O2_list[j];
-    params["o3"] = T_O3_list[j];
-    params["sun"] = B_lambda_teta_list[j];
-
-    for(size_t i=0;i<4;++i){
-     jarr_bka.append(S_lambda_lists_bka[i][j]);
-     jarr_sentinel.append(S_lambda_lists_sentinel[i][j]);
-    }
-    obj_response["response"] = jarr_bka;
-    params["_bka"] = jarr_bka;
-    params["_sentinel"] = jarr_sentinel;
-    common_params.append(params);
-    bka_array.append(obj_response);
-    }
-    QJsonObject obj;
-    obj.insert("bka_bands",bka_array);
-
-    //db_json::saveJsonObjectToFile("bka.json",obj,QJsonDocument::Indented);
-    //db_json::saveJsonArrayToFile("common_compact.json",common_params,QJsonDocument::Indented);
-    cat::add_new_satellite("landsat8");
-    cat::add_new_satellite("landsat9");
-    cat::add_new_satellite("sentinel2a-10m");
-    cat::add_new_satellite("sentinel2a-20m");
-    cat::add_new_satellite("sentinel2b-10m");
-    cat::add_new_satellite("sentinel2b-20m");
 }
 
-void loadList(QString path,vector<double>&list)
+void calculDividerList(vector<vector<double> >& responses)
 {
-    QFile file(path);
-    if(!file.open(QIODevice::ReadOnly)){
-
-        return;
-    }
-    QTextStream qts(&file);
-    QString line;
-    while(qts.readLineInto(&line)){
-
-        double var = line.toDouble();
-        list.push_back(var);
-    }
-    file.close();
-    qDebug()<<"List "<<path<<" "<<list.size();
-}
-
-void loadBkaList(QString path, vector<double> &m_bkaList)
-{
-    bool static isfillWaves = true;
-    QFile file(path);
-    if(!file.open(QIODevice::ReadOnly)){
-
-        return;
-    }
-    QTextStream qts(&file);
-    QString line;
-    while(qts.readLineInto(&line)){
-        double var2;
-        QStringList twoParams = line.split("\t");
-        if(twoParams.count()==2){
-            var2 = twoParams.at(1).toDouble();
-            if(isfillWaves){
-            lambda_waves.push_back(twoParams.at(0).toDouble());
-            }
-        }
-        else{
-            var2 = line.toDouble();
-        }
-        m_bkaList.push_back(var2);
-    }
-    file.close();
-    isfillWaves = false;
-    qDebug()<<"List "<<path<<" "<<m_bkaList.size();
-}
-
-void calculDividerList(vector<vector<double> > &allBka)
-{
-
     double sum1=0;
     double sum2=0;
     double sum3=0;
     double sum4=0;
-    int sizeList = allBka[0].size();
-
-    for(uintmax_t i=0;i<allBka.size();++i){
-
-        for(int j=0;j<sizeList;++j){
-            if(i==0){sum1+=allBka[i][j];}
-            if(i==1){sum2+=allBka[i][j];}
-            if(i==2){sum3+=allBka[i][j];}
-            if(i==3){sum4+=allBka[i][j];}
-
+    size_t sizeList = responses[0].size();
+    Q_ASSERT(sizeList == NUMBER_WAVELENGTH);
+    for(uintmax_t i=0;i<responses.size();++i){
+        for(size_t j=0;j<sizeList;++j){
+            if(i==0){sum1+=responses[i][j];}
+            if(i==1){sum2+=responses[i][j];}
+            if(i==2){sum3+=responses[i][j];}
+            if(i==3){sum4+=responses[i][j];}
         }
     }
     divider_list = {sum1,sum2,sum3,sum4};
@@ -490,20 +403,22 @@ inline vector <double> compute_EQ(const vector <double> &B_lambda_teta_list,
 }
 
 namespace lss{
-/* This is the private data structure which contains the data points
-   and their uncertainties */
 
-void setElevationAngle(const double &elAngle){
+void setElevationAngle(const double& elAngle){
     mu_0 = qCos(qDegreesToRadians(elAngle));
     qDebug()<<"elevation angle: "<<elAngle;
     qDebug()<<"cos mu_0: "<<mu_0;
 }
 
+void updateSatelliteResponses(const QString& satellite_name){
+
+}
+
 struct vars_struct {
-    double *tau_0_a_err;
-    double *beta_err;
-    double *g_err;
-    double *albedo_err;
+    double* tau_0_a_err;
+    double* beta_err;
+    double* g_err;
+    double* albedo_err;
 };
 
 /*struct result_values{
@@ -541,9 +456,6 @@ void printresult(double *x, double *xact, mp_result *result)
     printf("\n");
 }
 
-
-
-
 int quadfunc(int m, int n, double *p, double *dy, double **dvec, void *vars)
 {
 
@@ -560,7 +472,7 @@ int quadfunc(int m, int n, double *p, double *dy, double **dvec, void *vars)
                          T_O2_list,
                          T_O3_list,
                          T_H2O_list,
-                         S_lambda_lists_bka,
+                         S_lambda_lists,
                          mu_0,
                          albedo,
                          tau_0_a,
@@ -569,7 +481,7 @@ int quadfunc(int m, int n, double *p, double *dy, double **dvec, void *vars)
                          tau_m,
                          lambda_list,
                          divider_list,
-                         dark_pixel
+                         dark_pixels
                          );
 
     for (int i=0; i<m; i++) {
@@ -590,7 +502,7 @@ result_values optimize(std::array<double,4>blacks)
     is_first_run = false;
     }
     double p[] =      {0.1, 2, 0.01, 0.01};//{0.1, 2, 0.01, 0.01};               /* Initial conditions */
-    dark_pixel = {blacks[0],blacks[1],blacks[2],blacks[3]};
+    dark_pixels = {blacks[0],blacks[1],blacks[2],blacks[3]};
     double perror[4];		                                 /* Returned parameter errors */
     mp_par pars[4];                                        /* Parameter constraints */
     struct vars_struct v;

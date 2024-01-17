@@ -411,7 +411,7 @@ void EnviModule::startSearchingDarkestPixel()
 
 void EnviModule::taskForDarkSearchingFinished(bool result, DarkPoint dp,QString path)
 {
-    qInfo()<<"Поиск тёмного пикселя завершон"<<result;
+    qInfo()<<"Поиск тёмного пикселя завершён"<<result;
     pathDark = path;
     emit darkPathWasChanged();
     m_dp = dp;
