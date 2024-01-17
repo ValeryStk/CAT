@@ -4,12 +4,12 @@
 #include <QObject>
 
 
-class CompMonitor:public QObject
+class CompMonitor: public QObject
 
 {
-    Q_OBJECT
-public:
-    CompMonitor();
+  Q_OBJECT
+ public:
+  CompMonitor();
 };
 
 #endif // COMPMONITOR_H

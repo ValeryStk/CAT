@@ -6,31 +6,30 @@
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 
-enum SoundIndex{
+enum SoundIndex {
 
-    blackFounded,
-    keyPressed,
-    problemMessage,
-    shortAlert,
-    Myau
+  blackFounded,
+  keyPressed,
+  problemMessage,
+  shortAlert,
+  Myau
 };
 
 
 
-class Sounder:public QObject
-{
-    Q_OBJECT
-public:
-    Sounder();
+class Sounder: public QObject {
+  Q_OBJECT
+ public:
+  Sounder();
 
-private slots:
+ private slots:
   void playSound(QString sampleName);
   void changeSoundState(bool isOn);
 
-private:
+ private:
   bool isSoundOn;
-  QMediaPlayer        *m_player;
-  QMediaPlaylist      *m_playlist;
+  QMediaPlayer*        m_player;
+  QMediaPlaylist*      m_playlist;
   QStringList mySounds;
 
 };

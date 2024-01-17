@@ -4,7 +4,7 @@
 class QString;
 
 namespace cat {
-void loadList(QString path,std::vector<double>&list);
+void loadList(QString path, std::vector<double>& list);
 bool add_new_satellite(const QString& pathToFolder);
 }
 
