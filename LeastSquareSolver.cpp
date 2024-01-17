@@ -283,7 +283,7 @@ inline vector <double> compute_w(const double &g,
     vector<double> w;
     vector<double> g_lmb = compute_g(g, tau_0_a, beta,tau_m,list);
 
-    for(uintmax_t i=0; i<list.size(); ++i){
+    for(size_t i=0; i<list.size(); ++i){
         auto q_0 = 0.000076 - 0.316 * g_lmb[i] + 0.67744 * \
                 pow(g_lmb[i],2) - 0.4093 * pow(g_lmb[i],3);
         auto q_1 = -1.31136 - 0.8901 * g_lmb[i] + 3.55 * \
@@ -310,7 +310,7 @@ inline vector <double> compute_T_dif(const double &tau_e,
     auto w = compute_w(g, tau_0_a, beta,tau_m,list);
     vector<double> T_dif;
 
-    for(uintmax_t i = 0; i < list.size(); ++i){
+    for(size_t i = 0; i < list.size(); ++i){
         T_dif.push_back(tau_lambda[i] * exp(-u[i] - v[i] * tau_lambda[i] - w[i] * tau_lambda[i] * tau_lambda[i]));
     }
     return T_dif;
@@ -328,7 +328,7 @@ inline vector <double> compute_T_lambda(const double &tau_e,
     auto T_dif = compute_T_dif(tau_e, tau_0_a, beta, g, tau_m, list);
     vector<double> T_lmb;
 
-    for(uintmax_t i = 0; i < list.size(); ++i){
+    for(size_t i = 0; i < list.size(); ++i){
         T_lmb.push_back((exp(-tau_lambda[i])) + T_dif[i]);
     }
     return T_lmb;
@@ -351,7 +351,7 @@ inline double compute_B2(const vector <double> &S_lambda_list,
     auto T_lambda = compute_T_lambda(TAU_E,tau_0_a, beta, g,tau_m, list);
     double B2 = 0.0;
     auto B_atm = compute_B_atm(mu_0, tau_0_a, beta, g, tau_m, list);
-    for(uintmax_t i = 0; i < list.size(); ++i){
+    for(size_t i = 0; i < list.size(); ++i){
         auto T_g_lambda = T_O2_list[i] * T_O3_list[i] * T_H2O_list[i];
         auto S_lambda = S_lambda_list[i];
         auto B_sun = B_lambda_teta_list[i];
@@ -390,7 +390,7 @@ inline vector <double> compute_EQ(const vector <double> &B_lambda_teta_list,
                                   const vector <double> &dark_pixels){
 
     vector <double> EQ;
-    for(uintmax_t i = 0; i< dark_pixels.size(); ++i){
+    for(size_t i = 0; i< dark_pixels.size(); ++i){
         auto B1 = compute_B1(T_O2_list,T_O3_list,T_H2O_list,S_lambda_lists[i],
                              B_lambda_teta_list,mu_0, tau_0_a, beta, g, tau_m, list);
         auto B2 = compute_B2(S_lambda_lists[i], B_lambda_teta_list, T_O2_list,

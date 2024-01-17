@@ -50,19 +50,6 @@
         <file>pictures/sound_on.svg</file>
         <file>sounds/noSound.mp3</file>
         <file>sounds/soundOn.wav</file>
-        <file>sattelites_params/h2o.txt</file>
-        <file>sattelites_params/lmb.txt</file>
-        <file>sattelites_params/o2.txt</file>
-        <file>sattelites_params/o3.txt</file>
-        <file>sattelites_params/sun.txt</file>
-        <file>sattelites_params/sentinel/i1.txt</file>
-        <file>sattelites_params/sentinel/i2.txt</file>
-        <file>sattelites_params/sentinel/i3.txt</file>
-        <file>sattelites_params/sentinel/i4.txt</file>
-        <file>sattelites_params/bka/i1.txt</file>
-        <file>sattelites_params/bka/i2.txt</file>
-        <file>sattelites_params/bka/i3.txt</file>
-        <file>sattelites_params/bka/i4.txt</file>
         <file>_4release/_4restoring/sdb.json</file>
     </qresource>
 </RCC>
