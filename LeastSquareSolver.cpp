@@ -16,13 +16,13 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
-#include "satellite_adder.h"
 
 
 namespace {
 using std::vector;
 using std::string;
 
+static bool is_first_run = true;
 constexpr uint16_t NUMBER_WAVELENGTH = 601;
 constexpr double TAU_M_0 = 0.101;
 constexpr double LAMBDA_0 = 0.55;
@@ -31,14 +31,28 @@ constexpr double Q = 1;
 constexpr double TAU_E = 0.04;
 constexpr double pi = 3.14159265358979323846;
 
+struct vars_struct {
+  double* tau_0_a_err;
+  double* beta_err;
+  double* g_err;
+  double* albedo_err;
+};
+
+/*struct result_values{
+    double tau_0_a; // фикс при вычеслении lookup table
+    double beta;    // фикс при вычеслении lookup table
+    double g;       // фикс при вычеслении lookup table
+    double albedo;  // искомое для матрицы
+};*/
+
 double mu_0 = qCos(qDegreesToRadians(41.3));
 static result_values rv;
 void calculDividerList(vector<vector<double> >& responses);
 inline vector <double> compute_tau_m(const vector<double>& list);
 
-
-
 void loadAllLists() {
+  if(!is_first_run)return;
+  is_first_run = false;
   db_json::getJsonArrayFromFile("sdb.json", sdb);
   db_json::getJsonObjectFromFile("satellites.json", satellites);
   qDebug() << "sdb size: " << sdb.size();
@@ -84,7 +98,6 @@ void calculDividerList(vector<vector<double> >& responses) {
   divider_list = {sum1, sum2, sum3, sum4};
   qDebug() << "DIVIDED: " << sum1 << sum2 << sum3 << sum4;
 }
-
 
 inline vector <double> compute_tau_m(const vector<double>& list) {
   std::vector <double> result;
@@ -402,7 +415,40 @@ inline vector <double> compute_EQ(const vector <double>& B_lambda_teta_list,
   return EQ;
 }
 
+int quadfunc(int m, int n, double* p, double* dy, double** dvec, void* vars) {
+
+  auto tau_0_a = p[0];
+  auto beta    = p[1];
+  auto g       = p[2];
+  auto albedo  = p[3];
+
+  auto eq = compute_EQ(B_lambda_teta_list,
+                       T_O2_list,
+                       T_O3_list,
+                       T_H2O_list,
+                       S_lambda_lists,
+                       mu_0,
+                       albedo,
+                       tau_0_a,
+                       beta,
+                       g,
+                       tau_m,
+                       lambda_list,
+                       divider_list,
+                       dark_pixels
+                      );
+
+  for (int i = 0; i < m; i++) {
+    dy[i] = eq[i];
+  }
+  rv.err_tau = dy[0];
+  rv.err_beta = dy[1];
+  rv.err_g = dy[2];
+  rv.err_albedo = dy[3];
+  return 0;
 }
+
+} // namespace
 
 namespace lss {
 
@@ -446,56 +492,8 @@ void updateSatelliteResponses(const QString& satellite_name) {
   }
 }
 
-struct vars_struct {
-  double* tau_0_a_err;
-  double* beta_err;
-  double* g_err;
-  double* albedo_err;
-};
-
-/*struct result_values{
-    double tau_0_a; // фикс при вычеслении lookup table
-    double beta;    // фикс при вычеслении lookup table
-    double g;       // фикс при вычеслении lookup table
-    double albedo;  // искомое для матрицы
-};*/
-
-
-int quadfunc(int m, int n, double* p, double* dy, double** dvec, void* vars) {
-
-  auto tau_0_a = p[0];
-  auto beta    = p[1];
-  auto g       = p[2];
-  auto albedo  = p[3];
-
-  auto eq = compute_EQ(B_lambda_teta_list,
-                       T_O2_list,
-                       T_O3_list,
-                       T_H2O_list,
-                       S_lambda_lists,
-                       mu_0,
-                       albedo,
-                       tau_0_a,
-                       beta,
-                       g,
-                       tau_m,
-                       lambda_list,
-                       divider_list,
-                       dark_pixels
-                      );
-
-  for (int i = 0; i < m; i++) {
-    dy[i] = eq[i];
-  }
-  rv.err_tau = dy[0];
-  rv.err_beta = dy[1];
-  rv.err_g = dy[2];
-  rv.err_albedo = dy[3];
-  return 0;
-}
-
 result_values optimize(const QString& sat_name, const std::array<double, 4>& blacks) {
-  static bool is_first_run = true;
+
   if (is_first_run) {
     loadAllLists();
     is_first_run = false;
@@ -505,7 +503,7 @@ result_values optimize(const QString& sat_name, const std::array<double, 4>& bla
   dark_pixels = {blacks[0], blacks[1], blacks[2], blacks[3]};
   double perror[4];                                    /* Returned parameter errors */
   mp_par pars[4];                                        /* Parameter constraints */
-  struct vars_struct v;
+  vars_struct v;
   int status;
   mp_result result;
 
@@ -552,7 +550,6 @@ result_values optimize(const QString& sat_name, const std::array<double, 4>& bla
   qDebug() << "\nSTATUS: " << status;
   qDebug() << "VALUES: " << p[0] << p[1] << p[2] << p[3];
   qDebug() << "ERROR: " << rv.err_tau << rv.err_beta << rv.err_g << rv.err_albedo;
-  //printresult()
 
   rv.tau_0_a = p[0];
   rv.beta = p[1];
