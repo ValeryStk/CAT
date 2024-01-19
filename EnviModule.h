@@ -11,12 +11,13 @@
 #include <QPoint>
 #include <Sounder.h>
 #include "common_types.h"
+#include "calculation_solver.h"
 
 
 //!
 //!\brief Класса, отвечающий за взаимодействие QML и С++
 //!
-
+Q_DECLARE_METATYPE(result_values)
 
 class EnviModule: public QQuickPaintedItem {
   Q_OBJECT
@@ -43,6 +44,7 @@ class EnviModule: public QQuickPaintedItem {
   Q_PROPERTY(bool isBandsUpdated MEMBER isBandsUpdated NOTIFY bandsWereChanged)
   Q_PROPERTY(float multic MEMBER multic NOTIFY multicWasChanged)
   Q_PROPERTY(QString pathDark MEMBER pathDark NOTIFY darkPathWasChanged)
+
 
  public:
   enum Pages { //!< Перечисление страниц интерфейса пользователя
@@ -74,6 +76,8 @@ class EnviModule: public QQuickPaintedItem {
   Q_INVOKABLE QPoint dp() const;
   Q_INVOKABLE int getChannelsNumber() const;
   Q_INVOKABLE QString darkPointInfo() const;
+  Q_INVOKABLE QString darkPointSolution() const;
+  Q_INVOKABLE QString darkPointErrors() const;
   Q_INVOKABLE void setMode(const EnviModule::ModeChooser mode);
   Q_INVOKABLE EnviModule::ModeChooser getMode() const;
   Q_INVOKABLE bool getIsLomanStarted() const;
@@ -88,6 +92,7 @@ class EnviModule: public QQuickPaintedItem {
   QString pathDark;
   QStringList headerInfo;
   EnviReader m_envi;
+  calculation_solver* m_calculation_solver;
   QVector <QRect>* m_areas;
   QVector <QPolygon>m_ignorePolygons;
   QVector <QLine>* m_polygon;
@@ -115,6 +120,7 @@ class EnviModule: public QQuickPaintedItem {
   QTimer progressTimer;
   QThread* mThread;
   QThread beeperThread;
+  QThread calculationThread;
   Sounder m_sounder;
   QStringList channelsNames;
   void initializeVariables();
@@ -141,6 +147,7 @@ class EnviModule: public QQuickPaintedItem {
   void selectAllImageForDarkSearching();
   void addLineToLomanArea();
   void polygonWasCreated();
+  void params_for_dark_pixels_founded(result_values);
 
 
  signals:
@@ -183,6 +190,9 @@ class EnviModule: public QQuickPaintedItem {
   void scaleWasChanged();
   void multicWasChanged();
   void darkPathWasChanged();
+  void setElevationAngle(double angle);
+  void calculateDarkPixels(const QString& satellite_name,
+                           const QVector<double>& pixels);
 
 };
 

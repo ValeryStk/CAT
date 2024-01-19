@@ -12,6 +12,7 @@ SOURCES += \
         LeastSquareSolver.cpp \
         QrcFilesRestorer.cpp \
         Sounder.cpp \
+        calculation_solver.cpp \
         main.cpp \
         mpfit.c \
         satellite_adder.cpp
@@ -28,6 +29,7 @@ HEADERS += \
     UniversalDarkPixelFinder.h \
     UniversalImageReader.h \
     Version.h \
+    calculation_solver.h \
     common_types.h \
     mpfit.h \
     satellite_adder.h

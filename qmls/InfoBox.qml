@@ -3,13 +3,15 @@ import QtQuick.Controls 2.3
 
 ApplicationWindow{
     id:_appRectangle
-    minimumHeight: 620
-    maximumHeight: 620
+    minimumHeight: 720
+    maximumHeight: 720
     maximumWidth: 420
     minimumWidth: 420
     property int fontSize:9
     title: "Тёмный кандидат"
     property string text:""
+    property string dark_pixels_solution_text:""
+    property string dark_pixels_errors:""
     property string url:"qrc:/pictures/information.svg"
     Rectangle{
 
@@ -45,6 +47,41 @@ ApplicationWindow{
         }
 
         Rectangle{
+            id:_textSolutionForDarkPixels
+            anchors.top: _imageDarkArea.bottom
+            width:_infoBox.width
+            height:50
+            color:"gray"
+            Text{
+                anchors.topMargin: 5
+                anchors.leftMargin: 10
+                anchors.fill: parent
+                text:_appRectangle.dark_pixels_solution_text
+                wrapMode: Text.Wrap
+                antialiasing: true
+                font.pointSize: fontSize
+
+            }
+        }
+        Rectangle{
+            id:_textErrorDarkPixels
+            anchors.top: _textSolutionForDarkPixels.bottom
+            width:_infoBox.width
+            height:50
+            color:"gray"
+            Text{
+                anchors.topMargin: 5
+                anchors.leftMargin: 10
+                anchors.fill: parent
+                text:_appRectangle.dark_pixels_errors
+                wrapMode: Text.Wrap
+                antialiasing: true
+                font.pointSize: fontSize
+
+            }
+        }
+
+        Rectangle{
             id:_chooseDarkVariant
             anchors.bottom:_infoBox.bottom
             width: parent.width
@@ -70,6 +107,9 @@ ApplicationWindow{
                 height:40
                 fontSize: _appRectangle.fontSize
                 textButton: "Принять"
+                onClicked: {
+                accept()
+                }
             }
             CustomButton{
                 id:_CancelButton
@@ -80,11 +120,16 @@ ApplicationWindow{
                 height:40
                 fontSize: _appRectangle.fontSize
                 textButton: "Отмена"
+                onClicked: {
+                  cancel()
+                }
             }
 
         }
 
     }
 
-    signal ignoreAndSearchAgain();
+    signal ignoreAndSearchAgain()
+    signal cancel()
+    signal accept()
 }

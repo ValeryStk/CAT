@@ -492,7 +492,7 @@ void updateSatelliteResponses(const QString& satellite_name) {
   }
 }
 
-result_values optimize(const QString& sat_name, const std::array<double, 4>& blacks) {
+result_values optimize(const QString& sat_name, const QVector<double>& blacks) {
 
   if (is_first_run) {
     loadAllLists();

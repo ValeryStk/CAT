@@ -214,7 +214,9 @@ Rectangle {
             onShowDarkPoint: {
 
                 _iBox.url = _envi.pathDark
-                _iBox.text = _envi.darkPointInfo();
+                _iBox.text = _envi.darkPointInfo()
+                _iBox.dark_pixels_solution_text = _envi.darkPointSolution()
+                _iBox.dark_pixels_errors = _envi.darkPointErrors()
                 _iBox.visible = true
                 _iBox.show()
                 console.info("\nСценарий после нахождения тёмного пикселя\n")
@@ -1025,6 +1027,12 @@ Rectangle {
         onIgnoreAndSearchAgain:{
             _envi.ignoreTheDarkPixelAndFindNew();
             close();
+        }
+        onAccept: {
+        console.log("accept event is under construction...")
+        }
+        onCancel: {
+        close()
         }
     }
 

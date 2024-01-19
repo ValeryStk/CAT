@@ -162,6 +162,8 @@ struct DarkPoint {
   QPoint originPoint;
   QVector<QString>chanelsValues;
   QString info;
+  QString solution;
+  QString errors;
 };
 Q_DECLARE_METATYPE(DarkPoint)
 

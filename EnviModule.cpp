@@ -4,14 +4,23 @@
 #include <QDataStream>
 #include <QFileDialog>
 #include <QVector>
-#include "LeastSquareSolver.cpp"
+#include "common_types.h"
 using namespace std;
 
 EnviModule::EnviModule()
 
 {
-
   m_settings = new QSettings(QDir::currentPath() + "/atmoc.ini", QSettings::IniFormat);
+  m_calculation_solver = new calculation_solver;
+  m_calculation_solver->moveToThread(&calculationThread);
+  calculationThread.start();
+  connect(this,SIGNAL(setElevationAngle(double)),
+          m_calculation_solver,SLOT(setElavationAngle(double)));
+  connect(this,SIGNAL(calculateDarkPixels(const QString&, const QVector<double>&)),
+          m_calculation_solver,SLOT(solve_dark_pixels(const QString&,
+                                                      const QVector<double>&)));
+  connect(m_calculation_solver,SIGNAL(darkpixels_calculation_finished(result_values)),
+          this,SLOT(params_for_dark_pixels_founded(result_values)));
   homePath = m_settings->value("Dirs/defaultEnviFolder").toString();
   m_areas = new QVector <QRect>();
   m_polygon = new QVector<QLine>();
@@ -34,6 +43,7 @@ EnviModule::EnviModule()
   qRegisterMetaType<DarkPoint>();
   qRegisterMetaType<ModeChooser>();
   qRegisterMetaType<SoundIndex>("SoundIndex");
+  qRegisterMetaType<result_values>();
 
   connect(this, SIGNAL(openEnvi(QString)), &m_envi, SLOT(loadEnviImageData(QString)));
   connect(this, SIGNAL(addAreaToList()), SLOT(addArea()));
@@ -70,6 +80,7 @@ EnviModule::EnviModule()
 EnviModule::~EnviModule() {
   mThread->quit();
   beeperThread.quit();
+  calculationThread.quit();
 }
 
 void EnviModule::paint(QPainter* painter) {
@@ -160,7 +171,17 @@ Q_INVOKABLE int EnviModule::getChannelsNumber() const {
 }
 
 QString EnviModule::darkPointInfo() const {
-  return m_dp.info;
+    return m_dp.info;
+}
+
+QString EnviModule::darkPointSolution() const
+{
+    return m_dp.solution;
+}
+
+QString EnviModule::darkPointErrors() const
+{
+    return m_dp.errors;
 }
 
 void EnviModule::setMode(const EnviModule::ModeChooser mode) {
@@ -405,16 +426,13 @@ void EnviModule::taskForDarkSearchingFinished(bool result, DarkPoint dp, QString
   emit darkPathWasChanged();
   m_dp = dp;
   qDebug() << "hdr sun elevation: " << m_envi.getEnviHeader().sunElevationAngle;
-  lss::setElevationAngle(m_envi.getEnviHeader().sunElevationAngle);
-  m_calculeted_values = lss::optimize("_bka", {
-    dp.chanelsValues[0].toDouble(),
-      dp.chanelsValues[1].toDouble(),
-      dp.chanelsValues[2].toDouble(),
-      dp.chanelsValues[3].toDouble()
-  });
-  isDarkMarker = true;
-  this->update();
-  emit showDarkPoint();
+  emit setElevationAngle(m_envi.getEnviHeader().sunElevationAngle);
+  emit calculateDarkPixels("_bka",{
+                               dp.chanelsValues[0].toDouble(),
+                                 dp.chanelsValues[1].toDouble(),
+                                 dp.chanelsValues[2].toDouble(),
+                                 dp.chanelsValues[3].toDouble()
+                             });
 }
 
 void EnviModule::imageWasSavedAsBMP() {
@@ -493,4 +511,22 @@ void EnviModule::polygonWasCreated() {
   ignorePolygon.clear();
   m_points.clear();
   playSound("ignorePolygonAdded.wav");
+}
+
+void EnviModule::params_for_dark_pixels_founded(result_values rv)
+{
+
+   isDarkMarker = true;
+   this->update();
+   m_dp.errors = QString("errors: %1  %2  %3 %4").arg(
+               QString::number(rv.err_tau),
+               QString::number(rv.err_beta),
+               QString::number(rv.err_g),
+               QString::number(rv.err_albedo));
+   m_dp.solution = QString("tau_0_a: %1  beta: %2  g: %3  albedo: %4").arg(
+               QString::number(rv.tau_0_a),
+               QString::number(rv.beta),
+               QString::number(rv.g),
+               QString::number(rv.albedo));
+   emit showDarkPoint();
 }
