@@ -1,5 +1,6 @@
 import QtQuick 2.11
 import EnviModule 1.0
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.2
 
 Rectangle {
@@ -34,6 +35,12 @@ Rectangle {
             anchors.verticalCenter: _frame.verticalCenter
             anchors.horizontalCenter: _frame.horizontalCenter
             spacing:50
+
+            ComboBox{
+                id:_satellites_list
+                width:400
+                model:_enviPage.getSatellites()
+            }
 
             CustomButton{
 
@@ -217,5 +224,4 @@ Rectangle {
         }
 
     }
-
 }

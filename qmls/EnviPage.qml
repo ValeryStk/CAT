@@ -1234,5 +1234,9 @@ Rectangle {
         _progressBar.visible = true;
         changeBands()
     }
+
+    function getSatellites(){
+      return _envi.getSatellitesList();
+    }
 }
 

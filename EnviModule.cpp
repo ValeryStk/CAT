@@ -530,3 +530,9 @@ void EnviModule::params_for_dark_pixels_founded(result_values rv)
                QString::number(rv.albedo));
    emit showDarkPoint();
 }
+
+QStringList EnviModule::getSatellitesList()
+{
+    qDebug()<<"satellites ******************** ";
+    return{"1","2","3"};
+}

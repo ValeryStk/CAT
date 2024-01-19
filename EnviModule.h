@@ -82,6 +82,7 @@ class EnviModule: public QQuickPaintedItem {
   Q_INVOKABLE EnviModule::ModeChooser getMode() const;
   Q_INVOKABLE bool getIsLomanStarted() const;
   Q_INVOKABLE QPoint beginPolPoint() const;
+  Q_INVOKABLE QStringList getSatellitesList();
 
  private:
   QString version = VER_PRODUCTVERSION_STR;
