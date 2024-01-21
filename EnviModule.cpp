@@ -14,13 +14,13 @@ EnviModule::EnviModule()
   m_calculation_solver = new calculation_solver;
   m_calculation_solver->moveToThread(&calculationThread);
   calculationThread.start();
-  connect(this,SIGNAL(setElevationAngle(double)),
-          m_calculation_solver,SLOT(setElavationAngle(double)));
-  connect(this,SIGNAL(calculateDarkPixels(const QString&, const QVector<double>&)),
-          m_calculation_solver,SLOT(solve_dark_pixels(const QString&,
-                                                      const QVector<double>&)));
-  connect(m_calculation_solver,SIGNAL(darkpixels_calculation_finished(result_values)),
-          this,SLOT(params_for_dark_pixels_founded(result_values)));
+  connect(this, SIGNAL(setElevationAngle(double)),
+          m_calculation_solver, SLOT(setElavationAngle(double)));
+  connect(this, SIGNAL(calculateDarkPixels(const QString&, const QVector<double>&)),
+          m_calculation_solver, SLOT(solve_dark_pixels(const QString&,
+                                                       const QVector<double>&)));
+  connect(m_calculation_solver, SIGNAL(darkpixels_calculation_finished(result_values)),
+          this, SLOT(params_for_dark_pixels_founded(result_values)));
   homePath = m_settings->value("Dirs/defaultEnviFolder").toString();
   m_areas = new QVector <QRect>();
   m_polygon = new QVector<QLine>();
@@ -73,8 +73,7 @@ EnviModule::EnviModule()
   connect(this, SIGNAL(addLine()), this, SLOT(addLineToLomanArea()));
   connect(this, SIGNAL(endPolygon()), this, SLOT(polygonWasCreated()));
 
-  //auto result = lss::optimize({0.1, 2, 0.01, 0.01});
-  //qDebug()<<result.albedo;
+  QTimer::singleShot(200, this, SLOT(initial_update()));
 }
 
 EnviModule::~EnviModule() {
@@ -171,17 +170,15 @@ Q_INVOKABLE int EnviModule::getChannelsNumber() const {
 }
 
 QString EnviModule::darkPointInfo() const {
-    return m_dp.info;
+  return m_dp.info;
 }
 
-QString EnviModule::darkPointSolution() const
-{
-    return m_dp.solution;
+QString EnviModule::darkPointSolution() const {
+  return m_dp.solution;
 }
 
-QString EnviModule::darkPointErrors() const
-{
-    return m_dp.errors;
+QString EnviModule::darkPointErrors() const {
+  return m_dp.errors;
 }
 
 void EnviModule::setMode(const EnviModule::ModeChooser mode) {
@@ -427,12 +424,12 @@ void EnviModule::taskForDarkSearchingFinished(bool result, DarkPoint dp, QString
   m_dp = dp;
   qDebug() << "hdr sun elevation: " << m_envi.getEnviHeader().sunElevationAngle;
   emit setElevationAngle(m_envi.getEnviHeader().sunElevationAngle);
-  emit calculateDarkPixels("_bka",{
-                               dp.chanelsValues[0].toDouble(),
-                                 dp.chanelsValues[1].toDouble(),
-                                 dp.chanelsValues[2].toDouble(),
-                                 dp.chanelsValues[3].toDouble()
-                             });
+  emit calculateDarkPixels("_bka", {
+    dp.chanelsValues[0].toDouble(),
+      dp.chanelsValues[1].toDouble(),
+      dp.chanelsValues[2].toDouble(),
+      dp.chanelsValues[3].toDouble()
+  });
 }
 
 void EnviModule::imageWasSavedAsBMP() {
@@ -513,26 +510,32 @@ void EnviModule::polygonWasCreated() {
   playSound("ignorePolygonAdded.wav");
 }
 
-void EnviModule::params_for_dark_pixels_founded(result_values rv)
-{
+void EnviModule::params_for_dark_pixels_founded(result_values rv) {
 
-   isDarkMarker = true;
-   this->update();
-   m_dp.errors = QString("errors: %1  %2  %3 %4").arg(
-               QString::number(rv.err_tau),
-               QString::number(rv.err_beta),
-               QString::number(rv.err_g),
-               QString::number(rv.err_albedo));
-   m_dp.solution = QString("tau_0_a: %1  beta: %2  g: %3  albedo: %4").arg(
-               QString::number(rv.tau_0_a),
-               QString::number(rv.beta),
-               QString::number(rv.g),
-               QString::number(rv.albedo));
-   emit showDarkPoint();
+  isDarkMarker = true;
+  this->update();
+  m_dp.errors = QString("errors: %1  %2  %3 %4").arg(
+                    QString::number(rv.err_tau),
+                    QString::number(rv.err_beta),
+                    QString::number(rv.err_g),
+                    QString::number(rv.err_albedo));
+  m_dp.solution = QString("tau_0_a: %1  beta: %2  g: %3  albedo: %4").arg(
+                      QString::number(rv.tau_0_a),
+                      QString::number(rv.beta),
+                      QString::number(rv.g),
+                      QString::number(rv.albedo));
+  emit showDarkPoint();
 }
 
-QStringList EnviModule::getSatellitesList()
-{
-    qDebug()<<"satellites ******************** ";
-    return{"1","2","3"};
+void EnviModule::initial_update() {
+  satellitesList = m_calculation_solver->getSatellitesList();
+  emit satellitesListUpdated();
+}
+
+QStringList EnviModule::getSatellitesList() {
+  return satellitesList;
+}
+
+void EnviModule::updateCurrentSatellite(const QString& satName) {
+  m_calculation_solver->updateCurrentSatellite(satName);
 }

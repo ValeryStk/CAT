@@ -16,6 +16,7 @@ Rectangle {
     color: "#5b6a75"
     readonly property int  delayCloseMessage: 2000
     readonly property string version: _envi.version
+    readonly property var satelliteList: _envi.satellitesList
     property string path:_envi.homeEnviPath()
     property bool   isInitiazed:false
     property real   zoomFactor:zoomSpinBox.value
@@ -1237,6 +1238,10 @@ Rectangle {
 
     function getSatellites(){
       return _envi.getSatellitesList();
+    }
+
+    function updateCurrentSatellite(sat){
+    _envi.updateCurrentSatellite(sat)
     }
 }
 

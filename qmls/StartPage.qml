@@ -39,7 +39,7 @@ Rectangle {
             ComboBox{
                 id:_satellites_list
                 width:400
-                model:_enviPage.getSatellites()
+                model:_enviPage.satelliteList
             }
 
             CustomButton{
@@ -57,6 +57,7 @@ Rectangle {
 
                 onClicked: {
 
+                    _enviPage.updateCurrentSatellite(_satellites_list.currentText)
                     _MainWindow.currentPage = Envi.EnviPage
                     _enviPage.playSound("buttonPressed.mp3")
 

@@ -40,6 +40,7 @@ class EnviModule: public QQuickPaintedItem {
   Q_PROPERTY(QImage zoomedImage MEMBER zoomedImage NOTIFY zoomedImageChanged)
   Q_PROPERTY(QStringList channelsNames MEMBER channelsNames NOTIFY channelsNamesChanged)
   Q_PROPERTY(QStringList headerInfo MEMBER headerInfo NOTIFY headerInfoUpdated)
+  Q_PROPERTY(QStringList satellitesList MEMBER satellitesList NOTIFY satellitesListUpdated)
   Q_PROPERTY(QString version MEMBER version NOTIFY versionChanged)
   Q_PROPERTY(bool isBandsUpdated MEMBER isBandsUpdated NOTIFY bandsWereChanged)
   Q_PROPERTY(float multic MEMBER multic NOTIFY multicWasChanged)
@@ -83,6 +84,7 @@ class EnviModule: public QQuickPaintedItem {
   Q_INVOKABLE bool getIsLomanStarted() const;
   Q_INVOKABLE QPoint beginPolPoint() const;
   Q_INVOKABLE QStringList getSatellitesList();
+  Q_INVOKABLE void updateCurrentSatellite(const QString& satName);
 
  private:
   QString version = VER_PRODUCTVERSION_STR;
@@ -92,6 +94,7 @@ class EnviModule: public QQuickPaintedItem {
   QString message;
   QString pathDark;
   QStringList headerInfo;
+  QStringList satellitesList;
   EnviReader m_envi;
   calculation_solver* m_calculation_solver;
   QVector <QRect>* m_areas;
@@ -149,6 +152,7 @@ class EnviModule: public QQuickPaintedItem {
   void addLineToLomanArea();
   void polygonWasCreated();
   void params_for_dark_pixels_founded(result_values);
+  void initial_update();
 
 
  signals:
@@ -194,6 +198,7 @@ class EnviModule: public QQuickPaintedItem {
   void setElevationAngle(double angle);
   void calculateDarkPixels(const QString& satellite_name,
                            const QVector<double>& pixels);
+  void satellitesListUpdated();
 
 };
 

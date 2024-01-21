@@ -51,12 +51,19 @@ void calculDividerList(vector<vector<double> >& responses);
 inline vector <double> compute_tau_m(const vector<double>& list);
 
 void loadAllLists() {
-  if(!is_first_run)return;
+  if (!is_first_run)
+    return;
   is_first_run = false;
   db_json::getJsonArrayFromFile("sdb.json", sdb);
   db_json::getJsonObjectFromFile("satellites.json", satellites);
   qDebug() << "sdb size: " << sdb.size();
   qDebug() << "satellites: " << satellites.size();
+
+  auto sats = satellites.value("4").toArray();
+  for (int i = 0; i < sats.size(); ++i) {
+    satellites_list.append(sats[i].toString());
+  }
+
   for (int i = 0; i < sdb.size(); ++i) {
     T_H2O_list.push_back(sdb[i].toObject()["h2o"].toDouble());
     T_O2_list.push_back(sdb[i].toObject()["o2"].toDouble());
@@ -460,11 +467,12 @@ void setElevationAngle(const double& elAngle) {
 
 void updateSatelliteResponses(const QString& satellite_name) {
 
+  qDebug() << "Update satellite name...." << satellite_name;
   if (satellite_name == satellite_name_key) {
     return;
   }
   auto a1 = satellites["4"].toArray();
-//auto a2 = satellites["5"].toArray();
+  //auto a2 = satellites["5"].toArray();
   bool isExists = false;
   for (int i = 0; i < a1.size(); ++i) {
     if (i == satellite_name) {
@@ -473,12 +481,12 @@ void updateSatelliteResponses(const QString& satellite_name) {
     }
   }
   /*if(!isExists){
-      for(int i=0;i<a2.size();++i){
-         if(i==satellite_name){
-           isExists = true;
-           break;
-         }
-      }
+    for(int i=0;i<a2.size();++i){
+       if(i==satellite_name){
+         isExists = true;
+         break;
+       }
+    }
   }*/
   if (!isExists) {
     return;
@@ -490,6 +498,11 @@ void updateSatelliteResponses(const QString& satellite_name) {
       S_lambda_lists[j][i] = response[j].toDouble();
     }
   }
+}
+
+QStringList getSatellitesList() {
+
+  return satellites_list;
 }
 
 result_values optimize(const QString& sat_name, const QVector<double>& blacks) {
@@ -558,4 +571,6 @@ result_values optimize(const QString& sat_name, const QVector<double>& blacks) {
 
   return rv;
 }
+
+
 }
