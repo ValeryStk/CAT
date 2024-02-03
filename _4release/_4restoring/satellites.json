@@ -1,14 +1,13 @@
 {
     "4": [
-        "_bka",
-        "_sentinel",
-        "_sentinel2a-10m",
-        "_sentinel2a-20m",
-        "_sentinel2b-10m",
-        "_sentinel2b-20m"
+        "bka",
+        "sentinel2a-10m",
+        "sentinel2a-20m",
+        "sentinel2b-10m",
+        "sentinel2b-20m"
     ],
     "5": [
-        "_landsat8",
-        "_landsat9"
+        "landsat8",
+        "landsat9"
     ]
 }

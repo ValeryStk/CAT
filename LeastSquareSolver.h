@@ -17,7 +17,7 @@ vector<double> divider_list;
 vector<double> tau_m;
 QJsonObject satellites;
 QJsonArray sdb;
-QString satellite_name_key = "_bka";
+QString satellite_name_key = "bka";
 QStringList satellites_list;
 vector <double>  dark_pixels = {39.535587, 25.645323, 11.881793, 4.310712};
 

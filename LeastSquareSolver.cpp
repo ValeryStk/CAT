@@ -57,13 +57,14 @@ void loadAllLists() {
   db_json::getJsonArrayFromFile("sdb.json", sdb);
   db_json::getJsonObjectFromFile("satellites.json", satellites);
   qDebug() << "sdb size: " << sdb.size();
-  qDebug() << "satellites: " << satellites.size();
+  qDebug() << "satellites: " << satellites["4"].toArray().size();
 
   auto sats = satellites.value("4").toArray();
   for (int i = 0; i < sats.size(); ++i) {
     satellites_list.append(sats[i].toString());
   }
-
+  satellite_name_key = satellites_list[0];
+  qDebug()<<"initial satellite:"<<satellite_name_key;
   for (int i = 0; i < sdb.size(); ++i) {
     T_H2O_list.push_back(sdb[i].toObject()["h2o"].toDouble());
     T_O2_list.push_back(sdb[i].toObject()["o2"].toDouble());
@@ -75,8 +76,31 @@ void loadAllLists() {
       S_lambda_lists[j].push_back(response[j].toDouble());
     }
   }
+  qDebug()<<"Responses: "<<S_lambda_lists[0].size();
   calculDividerList(S_lambda_lists);
   tau_m = compute_tau_m(lambda_list);
+
+  //This is a draft for editing sdb.json
+  /*auto sats5 = satellites.value("5").toArray();
+  for (int i = 0; i < sats5.size(); ++i) {
+    satellites_list.append(sats5[i].toString());
+  }
+  QJsonArray sats_array;
+  for(int j=0;j<sdb.size();++j){
+  QJsonObject object;
+  for(int i=0;i<satellites_list.size();++i){
+      auto sat_array = sdb[j].toObject()[satellites_list[i]].toArray();
+      QStringRef newKey(&satellites_list[i],1,satellites_list[i].size()-1);
+      object[newKey] = sat_array;
+  }
+  object["h2o"] = sdb[j].toObject()["h2o"];
+  object["o2"] = sdb[j].toObject()["o2"];
+  object["o3"] = sdb[j].toObject()["o3"];
+  object["sun"] = sdb[j].toObject()["sun"];
+  object["wavelength"] = sdb[j].toObject()["wavelength"];
+  sats_array.append(object);
+  }
+  db_json::saveJsonArrayToFile("sdb.json",sats_array,QJsonDocument::Compact);*/
 }
 
 void calculDividerList(vector<vector<double> >& responses) {
