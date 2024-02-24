@@ -17,6 +17,7 @@ Rectangle {
     readonly property int  delayCloseMessage: 2000
     readonly property string version: _envi.version
     readonly property var satelliteList: _envi.satellitesList
+    property string currentSatellite:""
     property string path:_envi.homeEnviPath()
     property bool   isInitiazed:false
     property real   zoomFactor:zoomSpinBox.value
@@ -438,6 +439,20 @@ Rectangle {
             _envi.openImagesFolder()
         }
     }
+
+    Rectangle {
+    id:current_satellite_info
+    anchors.left: _openFolderButton.right
+    width:200
+    height:50
+    color:"#797979"
+    Text{
+    anchors.centerIn: current_satellite_info
+    font.pixelSize: 22
+    text:currentSatellite
+    }
+    }
+
 
     DoubleSpinBox{
         id:zoomSpinBox
@@ -1242,6 +1257,7 @@ Rectangle {
 
     function updateCurrentSatellite(sat){
     _envi.updateCurrentSatellite(sat)
+    currentSatellite = sat
     }
 }
 
